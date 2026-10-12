@@ -965,6 +965,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "このページには変更があります。リセットしてもよろしいですか？",
     ),
     "resetTip": MessageLookupByLibrary.simpleMessage("リセットしてもよろしいですか？"),
+    "residentialRouteAirportUnavailable": MessageLookupByLibrary.simpleMessage(
+      "ノードを生成して設定を適用しましたが、中継テストは失敗しました。元のノードとテスト URL を確認してください。",
+    ),
+    "residentialRouteApplyFailed": MessageLookupByLibrary.simpleMessage(
+      "住宅設定を適用できませんでした。接続は未確認で、保存した設定は保持されています。設定とログを確認してください。",
+    ),
     "residentialRouteConnect": MessageLookupByLibrary.simpleMessage("保存して接続"),
     "residentialRouteDescription": MessageLookupByLibrary.simpleMessage(
       "通信を空港ノードから住宅 SOCKS5 に中継します。DIRECT と拒否ルールを維持します。設定は現在のプロファイルに保存され、購読更新後も適用されます。追加アプリは不要です。",
@@ -976,7 +982,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "アドレス、ポート、認証情報、中継ノードを確認してください。",
     ),
     "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
-      "接続を確認できません。SOCKS5 情報、中継ノード、現在のプロファイルを確認してください。設定は保存されています。",
+      "保存または適用に失敗しました。接続は未確認です。設定とログを確認してください。認証情報は表示しません。",
     ),
     "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
       "先にプロファイルをインポートして選択してください。設定を読み込めない場合は接続前に確認してください。",
@@ -984,9 +990,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteParse": MessageLookupByLibrary.simpleMessage("URL から入力"),
     "residentialRoutePassword": MessageLookupByLibrary.simpleMessage("パスワード"),
     "residentialRoutePort": MessageLookupByLibrary.simpleMessage("ポート"),
+    "residentialRouteProfileChanged": MessageLookupByLibrary.simpleMessage(
+      "プロファイルが変更されたため処理を停止しました。現在のプロファイルで開き直してください。",
+    ),
     "residentialRouteSave": MessageLookupByLibrary.simpleMessage("設定を保存して適用"),
     "residentialRouteSaved": MessageLookupByLibrary.simpleMessage(
       "設定を保存して適用しました。無効にすると元のルーティングに戻ります。",
+    ),
+    "residentialRouteSelectionFailed": MessageLookupByLibrary.simpleMessage(
+      "設定を適用しましたが、住宅ノードを選択できませんでした。プロキシ画面とログを確認してください。",
     ),
     "residentialRouteServer": MessageLookupByLibrary.simpleMessage(
       "住宅プロキシのサーバー",
@@ -997,9 +1009,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteTitle": MessageLookupByLibrary.simpleMessage(
       "住宅プロキシ · IP-Link",
     ),
-    "residentialRouteTransit": MessageLookupByLibrary.simpleMessage("中継ノード"),
+    "residentialRouteTransit": MessageLookupByLibrary.simpleMessage(
+      "中継ノード（複数選択）",
+    ),
     "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
-      "具体的なノードを選択してください。プロバイダーのみの設定では、先に接続してこの画面を開き直してください。",
+      "選択したノードに住宅ノードを追加し、元のノードも残します。接続時は最初の選択を使用します。その後は IP-Link Residential グループで切り替えます。プロバイダーのみの設定では先に接続して画面を開き直してください。",
+    ),
+    "residentialRouteUnverified": MessageLookupByLibrary.simpleMessage(
+      "ノードを生成して設定を適用しました。中継テストは成功しましたが、住宅接続テストは失敗しました。SOCKS5 情報を確認するか別の住宅ノードを選択してください。認証情報が原因とは限りません。",
     ),
     "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
       "SOCKS5 URL（任意）",
@@ -1011,7 +1028,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteVerified": MessageLookupByLibrary.simpleMessage(
       "住宅プロキシの接続テストに成功しました。この画面を閉じても Clash はバックグラウンドで動作します。",
     ),
-    "residentialRouteWorking": MessageLookupByLibrary.simpleMessage("保存・適用中…"),
+    "residentialRouteWorking": MessageLookupByLibrary.simpleMessage(
+      "設定を適用して接続をテスト中…",
+    ),
     "resources": MessageLookupByLibrary.simpleMessage("リソース"),
     "respectRules": MessageLookupByLibrary.simpleMessage("ルールに従う"),
     "respectRulesDesc": MessageLookupByLibrary.simpleMessage(

@@ -51,7 +51,16 @@ void main() {
     expect(residential['password'], route.password);
     expect(residential['udp'], false);
     expect(config['mode'], 'rule');
-    expect(config['proxy-groups'], source['proxy-groups']);
+    expect(
+      (config['proxy-groups'] as List).first,
+      (source['proxy-groups'] as List).first,
+    );
+    expect((config['proxy-groups'] as List).last, {
+      'name': ResidentialRouteConfig.routeName,
+      'type': 'select',
+      'proxies': [route.nodeName('Airport HK'), 'Airport HK'],
+    });
+    expect(residential['name'], route.nodeName('Airport HK'));
     expect(config['rules'], [
       'DOMAIN,lan.example,DIRECT',
       'DOMAIN,blocked.example,REJECT',
@@ -105,19 +114,98 @@ void main() {
     },
   );
 
+  test('requires provider nodes to be hydrated before generating chains', () {
+    final source = airport()..['proxies'] = [];
+    source['proxy-providers'] = {
+      'airport': {
+        'type': 'http',
+        'url': 'https://airport.example/subscription',
+      },
+    };
+    expect(() => route.apply(source), throwsFormatException);
+  });
+
+  test('only checked nodes gain chains; originals and groups remain', () {
+    final source = airport();
+    (source['proxies'] as List).addAll(<Map<String, String>>[
+      {'name': 'Airport JP', 'type': 'ss'},
+      {'name': 'Airport US', 'type': 'ss'},
+    ]);
+    const multi = ResidentialRouteConfig(
+      enabled: true,
+      server: '192.0.2.30',
+      username: 'demo',
+      password: 'secret',
+      transits: ['Airport HK', 'Airport JP'],
+    );
+    final updated = multi.apply(source);
+    final proxies = updated['proxies'] as List;
+    expect(proxies.take(3).toList(), source['proxies']);
+    expect(proxies.skip(3).map((node) => node['dialer-proxy']), [
+      'Airport HK',
+      'Airport JP',
+    ]);
+    expect(
+      proxies.map((node) => node['name']),
+      isNot(contains(multi.nodeName('Airport US'))),
+    );
+    expect((updated['proxy-groups'] as List).last['proxies'], [
+      multi.nodeName('Airport HK'),
+      multi.nodeName('Airport JP'),
+      'Airport HK',
+      'Airport JP',
+    ]);
+    expect(
+      ResidentialRouteConfig.fromJson(multi.toJson()).selectedTransits,
+      multi.selectedTransits,
+    );
+  });
+
   test(
-    'supports provider nodes without storing a local provider server URL',
+    'node names match desktop endpoint and account hash without passwords',
     () {
-      final source = airport()..['proxies'] = [];
-      source['proxy-providers'] = {
-        'airport': {
-          'type': 'http',
-          'url': 'https://airport.example/subscription',
-        },
-      };
-      final updated = route.apply(source);
-      expect(updated['proxy-providers'], source['proxy-providers']);
-      expect(jsonEncode(updated), isNot(contains('127.0.0.1')));
+      expect(route.nodeName('Airport HK'), 'Airport HK 住宅-30-77643868');
+      const changedPassword = ResidentialRouteConfig(
+        server: '192.0.2.30',
+        username: 'demo',
+        password: 'other',
+      );
+      expect(
+        changedPassword.nodeName('Airport HK'),
+        route.nodeName('Airport HK'),
+      );
+      expect(route.nodeName('Airport HK'), isNot(contains(route.password)));
+    },
+  );
+
+  test('legacy single node settings migrate to one selected node', () {
+    final old = route.toJson()..remove('transits');
+    expect(ResidentialRouteConfig.fromJson(old).selectedTransits, [
+      'Airport HK',
+    ]);
+  });
+
+  test(
+    'multi-node routes reject missing, duplicate and generated-name collisions',
+    () {
+      for (final names in [
+        <String>[],
+        ['Airport HK', 'Airport HK'],
+        ['Airport HK', 'Missing'],
+      ]) {
+        final invalid = ResidentialRouteConfig(
+          enabled: true,
+          server: '192.0.2.30',
+          transits: names,
+        );
+        expect(() => invalid.apply(airport()), throwsFormatException);
+      }
+      final source = airport();
+      (source['proxies'] as List).add({
+        'name': route.nodeName('Airport HK'),
+        'type': 'ss',
+      });
+      expect(() => route.apply(source), throwsFormatException);
     },
   );
 

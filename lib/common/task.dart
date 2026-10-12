@@ -367,9 +367,12 @@ Future<void> _hydrateResidentialTransit(
   ResidentialRouteConfig route,
 ) async {
   final proxies = List<dynamic>.from(config['proxies'] as List? ?? []);
-  if (proxies.any((node) => node is Map && node['name'] == route.transit)) {
-    return;
-  }
+  final missing = route.selectedTransits
+      .where(
+        (name) => !proxies.any((node) => node is Map && node['name'] == name),
+      )
+      .toSet();
+  if (missing.isEmpty) return;
   final candidates = <Map<String, dynamic>>[];
   for (final provider in (config['proxy-providers'] as Map? ?? {}).values) {
     if (provider is! Map || provider['path'] is! String) continue;
@@ -383,7 +386,7 @@ Future<void> _hydrateResidentialTransit(
         if (node is! Map || node['name'] is! String) continue;
         final name =
             '${overrides['additional-prefix'] ?? ''}${node['name']}${overrides['additional-suffix'] ?? ''}';
-        if (name != route.transit) continue;
+        if (!missing.contains(name)) continue;
         candidates.add({
           ...Map<String, dynamic>.from(node),
           for (final entry in overrides.entries)
@@ -397,12 +400,14 @@ Future<void> _hydrateResidentialTransit(
       throw const FormatException('Airport provider cache could not be read');
     }
   }
-  if (candidates.length != 1) {
+  if (missing.any(
+    (name) => candidates.where((node) => node['name'] == name).length != 1,
+  )) {
     throw const FormatException(
       'Airport transit node is missing or ambiguous; load the original airport profile first',
     );
   }
-  config['proxies'] = [...proxies, candidates.single];
+  config['proxies'] = [...proxies, ...candidates];
 }
 
 typedef ShakingStoreArgs = ({

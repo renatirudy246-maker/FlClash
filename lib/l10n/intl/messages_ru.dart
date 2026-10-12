@@ -1192,6 +1192,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetTip": MessageLookupByLibrary.simpleMessage(
       "Вы уверены, что хотите выполнить сброс?",
     ),
+    "residentialRouteAirportUnavailable": MessageLookupByLibrary.simpleMessage(
+      "Узлы созданы, настройки применены, но проверка транзита не прошла. Проверьте исходный узел и URL проверки.",
+    ),
+    "residentialRouteApplyFailed": MessageLookupByLibrary.simpleMessage(
+      "Не удалось применить настройки. Подключение не подтверждено. Сохранённые данные оставлены; проверьте профиль и журнал.",
+    ),
     "residentialRouteConnect": MessageLookupByLibrary.simpleMessage(
       "Сохранить и подключить",
     ),
@@ -1205,7 +1211,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Проверьте адрес, порт, учётные данные и транзитный узел.",
     ),
     "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
-      "Не удалось подтвердить соединение. Проверьте SOCKS5, транзитный узел и текущий профиль. Настройки сохранены.",
+      "Ошибка сохранения или применения. Подключение не подтверждено. Проверьте профиль и журнал. Учётные данные не отображаются.",
     ),
     "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
       "Сначала импортируйте и выберите профиль. Если настройки не читаются, проверьте их перед подключением.",
@@ -1215,11 +1221,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "residentialRoutePassword": MessageLookupByLibrary.simpleMessage("Пароль"),
     "residentialRoutePort": MessageLookupByLibrary.simpleMessage("Порт"),
+    "residentialRouteProfileChanged": MessageLookupByLibrary.simpleMessage(
+      "Профиль изменился, операция остановлена. Откройте страницу для текущего профиля.",
+    ),
     "residentialRouteSave": MessageLookupByLibrary.simpleMessage(
       "Сохранить и применить",
     ),
     "residentialRouteSaved": MessageLookupByLibrary.simpleMessage(
       "Настройки сохранены и применены. Отключение восстанавливает исходную маршрутизацию.",
+    ),
+    "residentialRouteSelectionFailed": MessageLookupByLibrary.simpleMessage(
+      "Настройки применены, но домашний узел не выбран. Проверьте страницу прокси и журнал.",
     ),
     "residentialRouteServer": MessageLookupByLibrary.simpleMessage(
       "Адрес резидентного прокси",
@@ -1231,10 +1243,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Резидентный прокси · IP-Link",
     ),
     "residentialRouteTransit": MessageLookupByLibrary.simpleMessage(
-      "Транзитный узел",
+      "Транзитные узлы (можно выбрать несколько)",
     ),
     "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
-      "Выберите конкретный узел. Для профиля только с провайдерами сначала подключитесь, затем откройте эту страницу снова.",
+      "Для отмеченных узлов создаются домашние узлы, исходные сохраняются. Подключение выбирает первый отмеченный узел. Далее переключайте узлы в группе IP-Link Residential. Для профилей провайдеров сначала подключите исходный профиль и откройте страницу снова.",
+    ),
+    "residentialRouteUnverified": MessageLookupByLibrary.simpleMessage(
+      "Узлы созданы, настройки применены. Транзит работает, но проверка домашнего прокси не прошла. Проверьте SOCKS5 или выберите другой домашний узел. Причина не обязательно в учётных данных.",
     ),
     "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
       "SOCKS5 URL (необязательно)",
@@ -1249,7 +1264,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Проверка цепочки успешна. Можно закрыть страницу; Clash должен работать в фоне.",
     ),
     "residentialRouteWorking": MessageLookupByLibrary.simpleMessage(
-      "Сохранение и применение…",
+      "Применение настроек и проверка цепочки…",
     ),
     "resources": MessageLookupByLibrary.simpleMessage("Ресурсы"),
     "respectRules": MessageLookupByLibrary.simpleMessage("Соблюдать правила"),

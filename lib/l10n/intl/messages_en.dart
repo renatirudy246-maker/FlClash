@@ -1139,6 +1139,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetTip": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to reset?",
     ),
+    "residentialRouteAirportUnavailable": MessageLookupByLibrary.simpleMessage(
+      "Nodes created and configuration applied, but the airport test failed. Check the original airport node and test URL before testing the residential chain.",
+    ),
+    "residentialRouteApplyFailed": MessageLookupByLibrary.simpleMessage(
+      "Residential configuration could not be applied. Connection is unconfirmed; saved settings are retained. Check the profile and logs.",
+    ),
     "residentialRouteConnect": MessageLookupByLibrary.simpleMessage(
       "Save and connect",
     ),
@@ -1152,7 +1158,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Check the residential address, port, credentials and transit node.",
     ),
     "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
-      "Could not confirm the residential chain. Check the SOCKS5 details, transit node and current airport profile. Saved settings are retained.",
+      "Saving or applying failed; connection is unconfirmed. Check the current profile and logs. Credentials are not displayed.",
     ),
     "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
       "Import and select an airport profile first. If settings cannot be read, inspect the local configuration before connecting.",
@@ -1164,11 +1170,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Password",
     ),
     "residentialRoutePort": MessageLookupByLibrary.simpleMessage("Port"),
+    "residentialRouteProfileChanged": MessageLookupByLibrary.simpleMessage(
+      "The airport profile changed. This operation stopped; reopen residential routing for the current profile.",
+    ),
     "residentialRouteSave": MessageLookupByLibrary.simpleMessage(
       "Save / apply settings",
     ),
     "residentialRouteSaved": MessageLookupByLibrary.simpleMessage(
       "Settings saved and applied. Disabling restores the airport profile\'s routing.",
+    ),
+    "residentialRouteSelectionFailed": MessageLookupByLibrary.simpleMessage(
+      "Configuration applied, but the residential node could not be selected. Routing is unconfirmed; check the proxy page and logs.",
     ),
     "residentialRouteServer": MessageLookupByLibrary.simpleMessage(
       "Residential server",
@@ -1180,10 +1192,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Residential route · IP-Link",
     ),
     "residentialRouteTransit": MessageLookupByLibrary.simpleMessage(
-      "Airport transit node",
+      "Airport transit nodes (multiple selection)",
     ),
     "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
-      "Choose a concrete airport node. For provider-only profiles, first connect the airport and reopen this page to load its nodes.",
+      "Only checked nodes gain a corresponding residential node; originals remain. Connect selects the first checked node. Switch in the IP-Link Residential proxy group afterward. For provider-only profiles, connect the airport first, then reopen this page.",
+    ),
+    "residentialRouteUnverified": MessageLookupByLibrary.simpleMessage(
+      "Residential nodes created and configuration applied. The airport test passed, but the residential test failed. Check SOCKS5 details or try another residential node. A failed test does not necessarily mean invalid credentials.",
     ),
     "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
       "SOCKS5 URL (optional)",
@@ -1198,7 +1213,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Residential chain test passed. You may close this page; keep Clash running in the background.",
     ),
     "residentialRouteWorking": MessageLookupByLibrary.simpleMessage(
-      "Saving and applying…",
+      "Applying configuration and testing the chain…",
     ),
     "resources": MessageLookupByLibrary.simpleMessage("Resources"),
     "respectRules": MessageLookupByLibrary.simpleMessage("Respect rules"),

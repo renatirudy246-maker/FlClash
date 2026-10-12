@@ -862,6 +862,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "当前页面存在更改，确定重置吗？",
     ),
     "resetTip": MessageLookupByLibrary.simpleMessage("确定要重置吗？"),
+    "residentialRouteAirportUnavailable": MessageLookupByLibrary.simpleMessage(
+      "住宅节点已生成，配置已应用；机场中转节点未通过测试，请先确认原机场节点可连接及测试网址可访问，再测试住宅链路。",
+    ),
+    "residentialRouteApplyFailed": MessageLookupByLibrary.simpleMessage(
+      "住宅配置未能应用，尚未确认连接。请检查当前机场配置与日志；保存的设置仍保留。",
+    ),
     "residentialRouteConnect": MessageLookupByLibrary.simpleMessage("保存并连接"),
     "residentialRouteDescription": MessageLookupByLibrary.simpleMessage(
       "让代理流量先经过机场节点，再从住宅 SOCKS5 出口访问网站。原有直连和拒绝规则保留。设置绑定当前机场配置，订阅更新后继续生效，无需额外小工具。",
@@ -871,7 +877,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "请检查住宅地址、端口、账号密码和中转节点。",
     ),
     "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
-      "未能确认住宅链路，请检查 SOCKS5 信息、中转节点及当前机场配置。已保存的设置仍保留。",
+      "保存或应用配置时发生错误，尚未确认连接。请检查当前机场配置和日志；不会展示账号密码。",
     ),
     "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
       "请先导入并选择机场配置。如果本地设置读取失败，请先检查配置再连接。",
@@ -879,9 +885,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteParse": MessageLookupByLibrary.simpleMessage("从链接填写"),
     "residentialRoutePassword": MessageLookupByLibrary.simpleMessage("密码"),
     "residentialRoutePort": MessageLookupByLibrary.simpleMessage("端口"),
+    "residentialRouteProfileChanged": MessageLookupByLibrary.simpleMessage(
+      "当前机场配置已切换，本次操作停止，请打开当前配置的住宅转接页重试。",
+    ),
     "residentialRouteSave": MessageLookupByLibrary.simpleMessage("保存并应用设置"),
     "residentialRouteSaved": MessageLookupByLibrary.simpleMessage(
       "设置已保存并应用。关闭转接后恢复机场原有分流。",
+    ),
+    "residentialRouteSelectionFailed": MessageLookupByLibrary.simpleMessage(
+      "配置已应用，但未能选中住宅节点，尚未确认转接。请检查代理页和日志。",
     ),
     "residentialRouteServer": MessageLookupByLibrary.simpleMessage("住宅代理地址"),
     "residentialRouteShowPassword": MessageLookupByLibrary.simpleMessage(
@@ -890,9 +902,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteTitle": MessageLookupByLibrary.simpleMessage(
       "住宅转接 · IP-Link",
     ),
-    "residentialRouteTransit": MessageLookupByLibrary.simpleMessage("机场中转节点"),
+    "residentialRouteTransit": MessageLookupByLibrary.simpleMessage(
+      "机场中转节点（可多选）",
+    ),
     "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
-      "请选择具体机场节点。只有节点提供者的配置，请先连接机场，再重新打开此页面读取节点。",
+      "仅为勾选的节点新增“原节点名 住宅-标识”，原节点保留。连接时选择第一个勾选项，之后在代理页的 IP-Link Residential 分组切换。只有节点提供者的配置，请先连接机场，再重新打开此页面。",
+    ),
+    "residentialRouteUnverified": MessageLookupByLibrary.simpleMessage(
+      "住宅节点已生成，配置已应用；机场测试通过，但住宅链路测试失败。请检查 SOCKS5 地址、端口和认证，或在代理页换一个住宅节点。测试失败不等于账号密码一定有误。",
     ),
     "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
       "SOCKS5 链接（可选）",
@@ -904,7 +921,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteVerified": MessageLookupByLibrary.simpleMessage(
       "住宅链路测试通过。可以关闭此页面，保留 Clash 在后台运行。",
     ),
-    "residentialRouteWorking": MessageLookupByLibrary.simpleMessage("正在保存和应用…"),
+    "residentialRouteWorking": MessageLookupByLibrary.simpleMessage(
+      "正在应用配置并检测链路…",
+    ),
     "resources": MessageLookupByLibrary.simpleMessage("资源"),
     "respectRules": MessageLookupByLibrary.simpleMessage("遵守规则"),
     "respectRulesDesc": MessageLookupByLibrary.simpleMessage(

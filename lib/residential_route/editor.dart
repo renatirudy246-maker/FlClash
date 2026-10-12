@@ -1,12 +1,16 @@
 import 'package:material_ui/material_ui.dart';
 
 import 'config.dart';
+import 'connection.dart';
 
 class ResidentialRouteEditor extends StatefulWidget {
   final ResidentialRouteConfig initial;
   final List<String> nodes;
   final Map<String, String> labels;
-  final Future<bool> Function(ResidentialRouteConfig config, bool connect)
+  final Future<ResidentialRouteOutcome> Function(
+    ResidentialRouteConfig config,
+    bool connect,
+  )
   onSave;
 
   const ResidentialRouteEditor({
@@ -29,6 +33,7 @@ class _ResidentialRouteEditorState extends State<ResidentialRouteEditor> {
   late final _username = TextEditingController(text: widget.initial.username);
   late final _password = TextEditingController(text: widget.initial.password);
   late final _transit = TextEditingController(text: widget.initial.transit);
+  late final _transits = widget.initial.selectedTransits.toSet();
   late bool _enabled = widget.initial.enabled;
   bool _busy = false;
   bool _showPassword = false;
@@ -54,6 +59,7 @@ class _ResidentialRouteEditorState extends State<ResidentialRouteEditor> {
     username: _username.text,
     password: _password.text,
     transit: _transit.text,
+    transits: widget.nodes.isEmpty ? const [] : _transits.toList(),
   );
 
   void _parseUrl() {
@@ -87,16 +93,28 @@ class _ResidentialRouteEditorState extends State<ResidentialRouteEditor> {
       _status = _label('working');
     });
     try {
-      final verified = await widget.onSave(config, connect);
+      final outcome = await widget.onSave(config, connect);
       if (!mounted) return;
       setState(() {
         _enabled = enabled;
-        _status = verified
-            ? _label(connect ? 'verified' : 'saved')
-            : _label('failed');
+        _status = _label(outcome.name);
       });
+      final details = config.enabled && config.selectedTransits.isNotEmpty
+          ? '\n${config.nodeName(config.selectedTransits.first)}'
+          : '';
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(
+          content: Text('$_status$details'),
+          duration: const Duration(seconds: 8),
+        ),
+      );
     } catch (_) {
-      if (mounted) setState(() => _status = _label('failed'));
+      if (mounted) {
+        setState(() => _status = _label('failed'));
+        ScaffoldMessenger.maybeOf(
+          context,
+        )?.showSnackBar(SnackBar(content: Text(_status!)));
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -168,41 +186,64 @@ class _ResidentialRouteEditorState extends State<ResidentialRouteEditor> {
                 : (value) => setState(() => _showPassword = value ?? false),
           ),
           if (widget.nodes.isNotEmpty) ...[
-            DropdownButtonFormField<String>(
-              initialValue: widget.nodes.contains(_transit.text)
-                  ? _transit.text
-                  : null,
-              isExpanded: true,
-              decoration: InputDecoration(labelText: _label('transit')),
-              items: widget.nodes
-                  .map(
-                    (name) => DropdownMenuItem(value: name, child: Text(name)),
-                  )
-                  .toList(),
-              onChanged: _busy
-                  ? null
-                  : (value) => setState(() {
-                      _transit.text = value ?? '';
-                      _status = null;
-                    }),
+            Text('${_label('transit')} (${_transits.length})'),
+            SizedBox(
+              height: (({...widget.nodes, ..._transits}.length * 64).clamp(
+                64,
+                280,
+              )).toDouble(),
+              child: ListView(
+                children: [
+                  for (final name in {...widget.nodes, ..._transits})
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(name),
+                      value: _transits.contains(name),
+                      onChanged: _busy
+                          ? null
+                          : (value) => setState(() {
+                              if (value == true) {
+                                _transits.add(name);
+                              } else {
+                                _transits.remove(name);
+                              }
+                              _transit.text = _transits.firstOrNull ?? '';
+                              _status = null;
+                            }),
+                    ),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
           ] else
             _field('transit', _transit),
           Text(_label('transitHelp')),
           const SizedBox(height: 24),
+          if (_status != null) ...[
+            Text(_status!, key: const ValueKey('residential-status')),
+            const SizedBox(height: 16),
+          ],
           FilledButton(
             onPressed: _busy ? null : () => _save(true),
-            child: Text(_label('connect')),
+            child: _busy
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(_label('working')),
+                    ],
+                  )
+                : Text(_label('connect')),
           ),
           OutlinedButton(
             onPressed: _busy ? null : () => _save(false),
             child: Text(_label('save')),
           ),
-          if (_status != null) ...[
-            const SizedBox(height: 16),
-            Text(_status!, key: const ValueKey('residential-status')),
-          ],
         ],
       ),
     );

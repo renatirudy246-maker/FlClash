@@ -9,6 +9,74 @@ import 'package:yaml/yaml.dart';
 
 void main() {
   test(
+    'multiple selected provider nodes are hydrated and refreshed without unchecked nodes',
+    () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'residential-multi-provider-',
+      );
+      addTearDown(() => directory.delete(recursive: true));
+      final state = MakeRealProfileState(
+        profilesPath: directory.path,
+        profileId: 10,
+        rawConfig: {
+          'proxy-providers': {
+            'airport': {
+              'type': 'http',
+              'url': 'https://airport.example/subscription',
+              'override': {'additional-prefix': 'prefix '},
+            },
+          },
+          'rules': ['MATCH,DIRECT'],
+        },
+        realPatchConfig: const PatchClashConfig(),
+        overrideDns: false,
+        overrideNtp: false,
+        appendSystemDns: false,
+        proxyGroups: const [],
+        rules: const [],
+        addedRules: const [],
+        defaultUA: 'FlClash-Test',
+      );
+      final original =
+          loadYaml((await makeRealProfileTask(state)).yaml) as YamlMap;
+      final cache = File(
+        original['proxy-providers']['airport']['path'] as String,
+      );
+      await cache.parent.create(recursive: true);
+      await cache.writeAsString(
+        'proxies:\n  - {name: HK, type: socks5, server: 192.0.2.1, port: 1080}\n  - {name: JP, type: socks5, server: 192.0.2.2, port: 1081}\n  - {name: US, type: socks5, server: 192.0.2.3, port: 1082}\n',
+      );
+      const route = ResidentialRouteConfig(
+        enabled: true,
+        server: '192.0.2.30',
+        transits: ['prefix HK', 'prefix JP'],
+      );
+      final updated =
+          loadYaml(
+                (await makeRealProfileTask(
+                  state,
+                  residentialRoute: route,
+                )).yaml,
+              )
+              as YamlMap;
+      expect(updated['proxies'].map((node) => node['name']), [
+        'prefix HK',
+        'prefix JP',
+        route.nodeName('prefix HK'),
+        route.nodeName('prefix JP'),
+      ]);
+      expect(updated['proxy-providers'], original['proxy-providers']);
+      await cache.writeAsString(
+        'proxies:\n  - {name: HK, type: socks5, server: 192.0.2.1, port: 1080}\n',
+      );
+      await expectLater(
+        makeRealProfileTask(state, residentialRoute: route),
+        throwsFormatException,
+      );
+    },
+  );
+
+  test(
     'provider transit is restored from its cache and refreshed on apply',
     () async {
       final directory = await Directory.systemTemp.createTemp(

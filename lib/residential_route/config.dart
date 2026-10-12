@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
+
 class ResidentialRouteConfig {
   static const routeName = 'IP-Link Residential';
 
@@ -9,6 +11,7 @@ class ResidentialRouteConfig {
   final String username;
   final String password;
   final String transit;
+  final List<String> transits;
 
   const ResidentialRouteConfig({
     this.enabled = false,
@@ -17,6 +20,7 @@ class ResidentialRouteConfig {
     this.username = '',
     this.password = '',
     this.transit = '',
+    this.transits = const [],
   });
 
   factory ResidentialRouteConfig.fromJson(Map<String, dynamic> json) {
@@ -30,6 +34,7 @@ class ResidentialRouteConfig {
       username: json['username'] as String,
       password: json['password'] as String,
       transit: json['transit'] as String,
+      transits: (json['transits'] as List? ?? []).cast<String>(),
     );
   }
 
@@ -74,7 +79,27 @@ class ResidentialRouteConfig {
     'username': username,
     'password': password,
     'transit': transit,
+    'transits': transits,
   };
+
+  List<String> get selectedTransits =>
+      transits.isNotEmpty ? transits : (transit.isEmpty ? const [] : [transit]);
+
+  String nodeName(String name) {
+    final host = server.trim();
+    final hash = sha256
+        .convert(utf8.encode('$host:$port|$username'))
+        .toString()
+        .substring(0, 8)
+        .toUpperCase();
+    final ipv4 = RegExp(r'^\d+\.\d+\.\d+\.(\d+)$').firstMatch(host);
+    var hint =
+        ipv4?.group(1) ??
+        host.replaceAll(RegExp('[^A-Za-z0-9]'), '').toUpperCase();
+    if (hint.isEmpty) hint = 'IP';
+    if (hint.length > 6 && ipv4 == null) hint = hint.substring(0, 6);
+    return '${name.trim()} 住宅-$hint-$hash';
+  }
 
   void validateEndpoint() {
     if (server.isEmpty ||
@@ -93,16 +118,21 @@ class ResidentialRouteConfig {
 
   void validate() {
     validateEndpoint();
-    if (transit.isEmpty ||
-        transit.contains(',') ||
-        transit == routeName ||
-        const {
-          'DIRECT',
-          'REJECT',
-          'REJECT-DROP',
-          'PASS',
-          'GLOBAL',
-        }.contains(transit.toUpperCase())) {
+    if (selectedTransits.isEmpty ||
+        selectedTransits.toSet().length != selectedTransits.length ||
+        selectedTransits.any(
+          (name) =>
+              name.isEmpty ||
+              name.contains(',') ||
+              name == routeName ||
+              const {
+                'DIRECT',
+                'REJECT',
+                'REJECT-DROP',
+                'PASS',
+                'GLOBAL',
+              }.contains(name.toUpperCase()),
+        )) {
       throw const FormatException('Select an airport transit node');
     }
   }
@@ -114,40 +144,54 @@ class ResidentialRouteConfig {
       jsonDecode(jsonEncode(source)) as Map,
     );
     final proxies = List<dynamic>.from(config['proxies'] as List? ?? []);
-    final groups = config['proxy-groups'] as List? ?? [];
+    final groups = List<dynamic>.from(config['proxy-groups'] as List? ?? []);
+    final managedNames = {routeName, ...selectedTransits.map(nodeName)};
+    if (managedNames.length != selectedTransits.length + 1) {
+      throw const FormatException('Residential node names must be unique');
+    }
     if ([
       ...proxies,
       ...groups,
-    ].any((item) => item is Map && item['name'] == routeName)) {
+    ].any((item) => item is Map && managedNames.contains(item['name']))) {
       throw const FormatException(
         'Residential route name conflicts with profile',
       );
     }
-    if (groups.any((item) => item is Map && item['name'] == transit)) {
+    if (groups.any(
+      (item) => item is Map && selectedTransits.contains(item['name']),
+    )) {
       throw const FormatException('Choose a transit node, not a proxy group');
     }
-    final inline = proxies.where(
-      (item) => item is Map && item['name'] == transit,
-    );
-    if (inline.isEmpty && (config['proxy-providers'] as Map? ?? {}).isEmpty) {
-      throw const FormatException(
-        'Transit node no longer exists in this profile',
+    for (final name in selectedTransits) {
+      final inline = proxies.where(
+        (item) => item is Map && item['name'] == name,
       );
+      if (inline.length != 1) {
+        throw const FormatException(
+          'Transit node no longer exists in this profile',
+        );
+      }
+      if (inline.any((item) => (item as Map)['dialer-proxy'] != null)) {
+        throw const FormatException('Transit node already has a proxy chain');
+      }
+      proxies.add({
+        'name': nodeName(name),
+        'type': 'socks5',
+        'server': server,
+        'port': port,
+        if (username.isNotEmpty) 'username': username,
+        if (password.isNotEmpty) 'password': password,
+        'udp': false,
+        'dialer-proxy': name,
+      });
     }
-    if (inline.any((item) => (item as Map)['dialer-proxy'] != null)) {
-      throw const FormatException('Transit node already has a proxy chain');
-    }
-    proxies.add({
-      'name': routeName,
-      'type': 'socks5',
-      'server': server,
-      'port': port,
-      if (username.isNotEmpty) 'username': username,
-      if (password.isNotEmpty) 'password': password,
-      'udp': false,
-      'dialer-proxy': transit,
-    });
     config['proxies'] = proxies;
+    groups.add({
+      'name': routeName,
+      'type': 'select',
+      'proxies': [...selectedTransits.map(nodeName), ...selectedTransits],
+    });
+    config['proxy-groups'] = groups;
     config['mode'] = 'rule';
     final rules = (config['rules'] as List? ?? [])
         .cast<String>()

@@ -6548,20 +6548,20 @@ class AppLocalizations {
     );
   }
 
-  /// `Airport transit node`
+  /// `Airport transit nodes (multiple selection)`
   String get residentialRouteTransit {
     return Intl.message(
-      'Airport transit node',
+      'Airport transit nodes (multiple selection)',
       name: 'residentialRouteTransit',
       desc: '',
       args: [],
     );
   }
 
-  /// `Choose a concrete airport node. For provider-only profiles, first connect the airport and reopen this page to load its nodes.`
+  /// `Only checked nodes gain a corresponding residential node; originals remain. Connect selects the first checked node. Switch in the IP-Link Residential proxy group afterward. For provider-only profiles, connect the airport first, then reopen this page.`
   String get residentialRouteTransitHelp {
     return Intl.message(
-      'Choose a concrete airport node. For provider-only profiles, first connect the airport and reopen this page to load its nodes.',
+      'Only checked nodes gain a corresponding residential node; originals remain. Connect selects the first checked node. Switch in the IP-Link Residential proxy group afterward. For provider-only profiles, connect the airport first, then reopen this page.',
       name: 'residentialRouteTransitHelp',
       desc: '',
       args: [],
@@ -6588,10 +6588,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Saving and applying…`
+  /// `Applying configuration and testing the chain…`
   String get residentialRouteWorking {
     return Intl.message(
-      'Saving and applying…',
+      'Applying configuration and testing the chain…',
       name: 'residentialRouteWorking',
       desc: '',
       args: [],
@@ -6618,10 +6618,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Could not confirm the residential chain. Check the SOCKS5 details, transit node and current airport profile. Saved settings are retained.`
+  /// `Saving or applying failed; connection is unconfirmed. Check the current profile and logs. Credentials are not displayed.`
   String get residentialRouteFailed {
     return Intl.message(
-      'Could not confirm the residential chain. Check the SOCKS5 details, transit node and current airport profile. Saved settings are retained.',
+      'Saving or applying failed; connection is unconfirmed. Check the current profile and logs. Credentials are not displayed.',
       name: 'residentialRouteFailed',
       desc: '',
       args: [],
@@ -6653,6 +6653,56 @@ class AppLocalizations {
     return Intl.message(
       'Import and select an airport profile first. If settings cannot be read, inspect the local configuration before connecting.',
       name: 'residentialRouteLoadError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Residential nodes created and configuration applied. The airport test passed, but the residential test failed. Check SOCKS5 details or try another residential node. A failed test does not necessarily mean invalid credentials.`
+  String get residentialRouteUnverified {
+    return Intl.message(
+      'Residential nodes created and configuration applied. The airport test passed, but the residential test failed. Check SOCKS5 details or try another residential node. A failed test does not necessarily mean invalid credentials.',
+      name: 'residentialRouteUnverified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nodes created and configuration applied, but the airport test failed. Check the original airport node and test URL before testing the residential chain.`
+  String get residentialRouteAirportUnavailable {
+    return Intl.message(
+      'Nodes created and configuration applied, but the airport test failed. Check the original airport node and test URL before testing the residential chain.',
+      name: 'residentialRouteAirportUnavailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Residential configuration could not be applied. Connection is unconfirmed; saved settings are retained. Check the profile and logs.`
+  String get residentialRouteApplyFailed {
+    return Intl.message(
+      'Residential configuration could not be applied. Connection is unconfirmed; saved settings are retained. Check the profile and logs.',
+      name: 'residentialRouteApplyFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Configuration applied, but the residential node could not be selected. Routing is unconfirmed; check the proxy page and logs.`
+  String get residentialRouteSelectionFailed {
+    return Intl.message(
+      'Configuration applied, but the residential node could not be selected. Routing is unconfirmed; check the proxy page and logs.',
+      name: 'residentialRouteSelectionFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The airport profile changed. This operation stopped; reopen residential routing for the current profile.`
+  String get residentialRouteProfileChanged {
+    return Intl.message(
+      'The airport profile changed. This operation stopped; reopen residential routing for the current profile.',
+      name: 'residentialRouteProfileChanged',
       desc: '',
       args: [],
     );

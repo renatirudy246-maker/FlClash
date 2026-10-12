@@ -3,6 +3,7 @@ import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/residential_route/config.dart';
+import 'package:fl_clash/residential_route/connection.dart';
 import 'package:fl_clash/residential_route/editor.dart';
 import 'package:fl_clash/residential_route/store.dart';
 import 'package:fl_clash/widgets/keyboard_inset_hold.dart';
@@ -43,6 +44,7 @@ class _ResidentialRouteViewState extends ConsumerState<ResidentialRouteView> {
     names.removeWhere(
       (name) =>
           name == ResidentialRouteConfig.routeName ||
+          config.selectedTransits.map(config.nodeName).contains(name) ||
           const {
             'DIRECT',
             'REJECT',
@@ -54,31 +56,56 @@ class _ResidentialRouteViewState extends ConsumerState<ResidentialRouteView> {
     return (config: config, nodes: names.toList()..sort());
   }
 
-  Future<bool> _save(ResidentialRouteConfig config, bool connect) async {
+  Future<ResidentialRouteOutcome> _save(
+    ResidentialRouteConfig config,
+    bool connect,
+  ) async {
     final profile = _profile!;
     final container = ProviderScope.containerOf(context, listen: false);
-    if (container.read(currentProfileProvider)?.id != profile.id) {
-      throw const FormatException('Airport profile changed');
-    }
-    await ResidentialRouteStore.save(profile.id, config);
     final setup = container.read(setupActionProvider.notifier);
-    if (config.enabled) setup.changeMode(Mode.rule);
-    final applied = connect
-        ? await setup.setRunning(true, initialize: true)
-        : await setup.applyProfile(force: true);
-    if (!applied) throw const FormatException('Configuration was not applied');
-    if (container.read(currentProfileProvider)?.id != profile.id) return false;
     final core = container.read(coreHandlerProvider);
-    await core.closeConnections();
-    if (!connect) return true;
-    final testUrl = container.read(appSettingProvider).testUrl;
-    final delay = await core.getDelay(
-      testUrl,
-      ResidentialRouteConfig.routeName,
+    bool isCurrent() =>
+        container.read(currentProfileProvider)?.id == profile.id;
+    return applyResidentialRoute(
+      config: config,
+      connect: connect,
+      isCurrent: isCurrent,
+      save: () => ResidentialRouteStore.save(profile.id, config),
+      apply: () {
+        if (config.enabled) setup.changeMode(Mode.rule);
+        return connect
+            ? setup.setRunning(true, initialize: true)
+            : setup.applyProfile(force: true);
+      },
+      select: (name) async {
+        final result = await core.changeProxy(
+          ChangeProxyParams(
+            groupName: ResidentialRouteConfig.routeName,
+            proxyName: name,
+          ),
+        );
+        if (result.message.isNotEmpty || !isCurrent()) return false;
+        container
+            .read(profilesActionProvider.notifier)
+            .updateCurrentSelectedMap(ResidentialRouteConfig.routeName, name);
+        final proxies = container.read(proxiesActionProvider.notifier);
+        proxies.updateCurrentGroupName(ResidentialRouteConfig.routeName);
+        await proxies.updateGroups();
+        return true;
+      },
+      closeConnections: core.closeConnections,
+      test: (name) async {
+        try {
+          final delay = await core.getDelay(
+            container.read(appSettingProvider).testUrl,
+            name,
+          );
+          return delay?.value != null && delay!.value! > 0;
+        } catch (_) {
+          return false;
+        }
+      },
     );
-    return container.read(currentProfileProvider)?.id == profile.id &&
-        delay?.value != null &&
-        delay!.value! > 0;
   }
 
   @override
@@ -87,52 +114,60 @@ class _ResidentialRouteViewState extends ConsumerState<ResidentialRouteView> {
     return KeyboardInsetHold(
       child: CommonScaffold(
         title: text.residentialRouteTitle,
-        body: ListView(
-          padding: EdgeInsets.fromLTRB(20, context.appBarInset, 20, 24),
-          children: [
-            if (_profile != null) ...[
-              Text(_profile.realLabel),
-              const SizedBox(height: 16),
+        body: Builder(
+          builder: (context) => ListView(
+            padding: EdgeInsets.fromLTRB(20, context.contentTopPadding, 20, 24),
+            children: [
+              if (_profile != null) ...[
+                Text(_profile.realLabel),
+                const SizedBox(height: 16),
+              ],
+              FutureBuilder(
+                future: _load,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text(text.residentialRouteLoadError);
+                  }
+                  final data = snapshot.data;
+                  if (data == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return ResidentialRouteEditor(
+                    initial: data.config,
+                    nodes: data.nodes,
+                    labels: {
+                      'description': text.residentialRouteDescription,
+                      'enabled': text.residentialRouteEnabled,
+                      'url': text.residentialRouteUrl,
+                      'parse': text.residentialRouteParse,
+                      'server': text.residentialRouteServer,
+                      'port': text.residentialRoutePort,
+                      'username': text.residentialRouteUsername,
+                      'password': text.residentialRoutePassword,
+                      'showPassword': text.residentialRouteShowPassword,
+                      'transit': text.residentialRouteTransit,
+                      'transitHelp': text.residentialRouteTransitHelp,
+                      'connect': text.residentialRouteConnect,
+                      'save': text.residentialRouteSave,
+                      'working': text.residentialRouteWorking,
+                      'saved': text.residentialRouteSaved,
+                      'verified': text.residentialRouteVerified,
+                      'failed': text.residentialRouteFailed,
+                      'unverified': text.residentialRouteUnverified,
+                      'airportUnavailable':
+                          text.residentialRouteAirportUnavailable,
+                      'applyFailed': text.residentialRouteApplyFailed,
+                      'selectionFailed': text.residentialRouteSelectionFailed,
+                      'profileChanged': text.residentialRouteProfileChanged,
+                      'urlError': text.residentialRouteUrlError,
+                      'endpointError': text.residentialRouteEndpointError,
+                    },
+                    onSave: _save,
+                  );
+                },
+              ),
             ],
-            FutureBuilder(
-              future: _load,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text(text.residentialRouteLoadError);
-                }
-                final data = snapshot.data;
-                if (data == null) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return ResidentialRouteEditor(
-                  initial: data.config,
-                  nodes: data.nodes,
-                  labels: {
-                    'description': text.residentialRouteDescription,
-                    'enabled': text.residentialRouteEnabled,
-                    'url': text.residentialRouteUrl,
-                    'parse': text.residentialRouteParse,
-                    'server': text.residentialRouteServer,
-                    'port': text.residentialRoutePort,
-                    'username': text.residentialRouteUsername,
-                    'password': text.residentialRoutePassword,
-                    'showPassword': text.residentialRouteShowPassword,
-                    'transit': text.residentialRouteTransit,
-                    'transitHelp': text.residentialRouteTransitHelp,
-                    'connect': text.residentialRouteConnect,
-                    'save': text.residentialRouteSave,
-                    'working': text.residentialRouteWorking,
-                    'saved': text.residentialRouteSaved,
-                    'verified': text.residentialRouteVerified,
-                    'failed': text.residentialRouteFailed,
-                    'urlError': text.residentialRouteUrlError,
-                    'endpointError': text.residentialRouteEndpointError,
-                  },
-                  onSave: _save,
-                );
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );
