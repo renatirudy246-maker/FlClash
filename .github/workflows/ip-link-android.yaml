@@ -1,0 +1,80 @@
+name: IP-Link Android
+
+on:
+  push:
+    branches: [residential-route]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ip-link-android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  arm64:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.2'
+          cache-dependency-path: core/go.sum
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.47.4'
+          cache: true
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install Android build tools
+        run: sdkmanager 'platforms;android-37.0' 'build-tools;36.0.0' 'ndk;28.2.13676358' 'cmake;3.22.1'
+
+      - name: Resolve dependencies and analyze
+        run: |
+          flutter pub get
+          flutter analyze --no-fatal-infos
+
+      - name: Test residential routing
+        run: |
+          cp pubspec.yaml /tmp/ip-link-pubspec.yaml
+          trap 'cp /tmp/ip-link-pubspec.yaml pubspec.yaml' EXIT
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('pubspec.yaml')
+          p.write_text(p.read_text().replace('build_assets: true', 'build_assets: false'))
+          PY
+          flutter test --reporter expanded test/common/residential_route_test.dart test/common/residential_route_task_test.dart test/widgets/residential_route_editor_test.dart test/providers/setup_action_test.dart
+
+      - name: Build ARM64 APK
+        run: |
+          grep -A 2 'rust_api:' pubspec.yaml | grep 'build_assets: true'
+          grep -A 2 'setup:' pubspec.yaml | grep 'build_assets: true'
+          flutter build apk --release --target-platform android-arm64 --no-pub
+
+      - name: Prepare install package
+        run: |
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-release.apk dist/FlClash-IP-Link-arm64.apk
+          cp IP_LINK.md LICENSE dist/
+          git rev-parse HEAD > dist/SOURCE_COMMIT.txt
+          cd dist
+          sha256sum FlClash-IP-Link-arm64.apk > SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FlClash-IP-Link-arm64
+          path: dist/
+          retention-days: 14

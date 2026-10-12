@@ -400,6 +400,7 @@ class SetupAction extends _$SetupAction {
         matchTarget: setupState.matchTarget,
         safeMode: ref.read(safeModeProvider),
       ),
+      residentialRoute: await ResidentialRouteStore.load(profileId),
     );
     return res;
   }
@@ -576,7 +577,21 @@ class SetupAction extends _$SetupAction {
       return getProfile(setupState: setupState, patchConfig: realPatchConfig);
     }, title: 'build profile');
     final profileFailed = realProfile == null;
-    final yamlString = realProfile?.yaml ?? '';
+    var yamlString = realProfile?.yaml ?? '';
+    if (profileFailed && profile != null) {
+      var blockResidentialTraffic = false;
+      try {
+        blockResidentialTraffic = (await ResidentialRouteStore.load(
+          profile.id,
+        )).enabled;
+      } catch (_) {
+        blockResidentialTraffic = true;
+      }
+      if (blockResidentialTraffic) {
+        changeMode(Mode.rule);
+        yamlString = 'mode: rule\nrules:\n  - MATCH,REJECT\n';
+      }
+    }
     final yamlMd5 = realProfile?.md5 ?? '';
     if (!profileFailed && yamlMd5 == globalState.lastConfigMd5 && !force) {
       return _SetupTaskResult.completed;

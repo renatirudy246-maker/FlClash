@@ -732,9 +732,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputRuleContent": MessageLookupByLibrary.simpleMessage(
       "Enter the rule content",
     ),
-    "installedAppsPermissionDeniedMessage": MessageLookupByLibrary.simpleMessage(
-      "The app list permission was denied, so installed apps cannot be listed. Please grant it manually in system settings.",
-    ),
+    "installedAppsPermissionDeniedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "The app list permission was denied, so installed apps cannot be listed. Please grant it manually in system settings.",
+        ),
     "installedAppsPermissionDesc": MessageLookupByLibrary.simpleMessage(
       "This system hides the installed app list until the permission is granted. Authorize it to configure the per-app proxy.",
     ),
@@ -1138,6 +1139,67 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "resetTip": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to reset?",
+    ),
+    "residentialRouteConnect": MessageLookupByLibrary.simpleMessage(
+      "Save and connect",
+    ),
+    "residentialRouteDescription": MessageLookupByLibrary.simpleMessage(
+      "Route proxied traffic through an airport node, then your residential SOCKS5 proxy. Existing DIRECT and rejection rules remain. Settings belong to the current airport profile and survive subscription updates. No companion app is needed.",
+    ),
+    "residentialRouteEnabled": MessageLookupByLibrary.simpleMessage(
+      "Enable residential route",
+    ),
+    "residentialRouteEndpointError": MessageLookupByLibrary.simpleMessage(
+      "Check the residential address, port, credentials and transit node.",
+    ),
+    "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
+      "Could not confirm the residential chain. Check the SOCKS5 details, transit node and current airport profile. Saved settings are retained.",
+    ),
+    "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
+      "Import and select an airport profile first. If settings cannot be read, inspect the local configuration before connecting.",
+    ),
+    "residentialRouteParse": MessageLookupByLibrary.simpleMessage(
+      "Fill fields from URL",
+    ),
+    "residentialRoutePassword": MessageLookupByLibrary.simpleMessage(
+      "Password",
+    ),
+    "residentialRoutePort": MessageLookupByLibrary.simpleMessage("Port"),
+    "residentialRouteSave": MessageLookupByLibrary.simpleMessage(
+      "Save / apply settings",
+    ),
+    "residentialRouteSaved": MessageLookupByLibrary.simpleMessage(
+      "Settings saved and applied. Disabling restores the airport profile\'s routing.",
+    ),
+    "residentialRouteServer": MessageLookupByLibrary.simpleMessage(
+      "Residential server",
+    ),
+    "residentialRouteShowPassword": MessageLookupByLibrary.simpleMessage(
+      "Show password",
+    ),
+    "residentialRouteTitle": MessageLookupByLibrary.simpleMessage(
+      "Residential route · IP-Link",
+    ),
+    "residentialRouteTransit": MessageLookupByLibrary.simpleMessage(
+      "Airport transit node",
+    ),
+    "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
+      "Choose a concrete airport node. For provider-only profiles, first connect the airport and reopen this page to load its nodes.",
+    ),
+    "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
+      "SOCKS5 URL (optional)",
+    ),
+    "residentialRouteUrlError": MessageLookupByLibrary.simpleMessage(
+      "Invalid SOCKS5 URL. Use socks5://username:password@host:port; percent-encode special characters.",
+    ),
+    "residentialRouteUsername": MessageLookupByLibrary.simpleMessage(
+      "Username",
+    ),
+    "residentialRouteVerified": MessageLookupByLibrary.simpleMessage(
+      "Residential chain test passed. You may close this page; keep Clash running in the background.",
+    ),
+    "residentialRouteWorking": MessageLookupByLibrary.simpleMessage(
+      "Saving and applying…",
     ),
     "resources": MessageLookupByLibrary.simpleMessage("Resources"),
     "respectRules": MessageLookupByLibrary.simpleMessage("Respect rules"),

@@ -14,12 +14,15 @@ import 'package:fl_clash/providers/core.dart';
 import 'package:fl_clash/providers/database.dart';
 import 'package:fl_clash/providers/state.dart';
 import 'package:fl_clash/state.dart';
+import 'package:fl_clash/residential_route/config.dart';
+import 'package:fl_clash/residential_route/store.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yaml/yaml.dart';
 
 import '../helpers/test_profiles.dart';
@@ -145,6 +148,7 @@ void main() {
   late ProviderContainer container;
 
   setUp(() {
+    SharedPreferences.setMockInitialValues({});
     action = TestSetupAction();
     container = ProviderContainer(
       overrides: [
@@ -857,6 +861,52 @@ void main() {
         expect(succeeded, isFalse);
         expect(pushedConfig, isEmpty);
         expect(scoped.read(currentProfileIdProvider), profile.id);
+      },
+    );
+
+    test(
+      'a failed residential profile writes rejection rules instead of defaults',
+      () async {
+        final profile = Profile.normal(label: 'p');
+        await ResidentialRouteStore.save(
+          profile.id,
+          const ResidentialRouteConfig(
+            enabled: true,
+            server: '192.0.2.2',
+            port: 1080,
+            username: 'fixture',
+            password: 'fixture-password',
+            transit: 'Missing node',
+          ),
+        );
+        final core = _MockCoreHandlerInterface();
+        when(() => core.getConfig(any())).thenAnswer((_) async => {});
+        String? pushedConfig;
+        when(() => core.setupConfig(any())).thenAnswer((_) async {
+          pushedConfig = await File(
+            await appPath.configFilePath,
+          ).readAsString();
+          return '';
+        });
+        final scoped = ProviderContainer(
+          overrides: [
+            profilesProvider.overrideWith(() => TestProfiles([profile])),
+            currentProfileIdProvider.overrideWithBuild((_, _) => profile.id),
+            setupStateProvider.overrideWith(
+              (_, id) => nullProfileSetupState.copyWith(profileId: id),
+            ),
+            coreHandlerProvider.overrideWithValue(CoreController.scoped(core)),
+            setupActionProvider.overrideWith(SetupAction.new),
+          ],
+        );
+        addTearDown(scoped.dispose);
+        final succeeded = await scoped
+            .read(setupActionProvider.notifier)
+            .applyProfile(force: true);
+        expect(succeeded, isFalse);
+        expect(pushedConfig, contains('MATCH,REJECT'));
+        expect(pushedConfig, isNot(contains('fixture-password')));
+        expect(scoped.read(patchClashConfigProvider).mode, Mode.rule);
       },
     );
 

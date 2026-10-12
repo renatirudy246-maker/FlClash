@@ -9,6 +9,7 @@ import 'package:fl_clash/views/access.dart';
 import 'package:fl_clash/views/backup_and_restore.dart';
 import 'package:fl_clash/views/config/general.dart';
 import 'package:fl_clash/views/hotkey.dart';
+import 'package:fl_clash/views/residential_route.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,6 +64,11 @@ class _ToolViewState extends ConsumerState<ToolsView> {
     return generateSection(
       title: context.appLocalizations.settings,
       items: [
+        ListItem.open(
+          leading: const GlyphIcon(AppGlyphs.link),
+          title: Text(context.appLocalizations.residentialRouteTitle),
+          widget: const ResidentialRouteView(),
+        ),
         const _LocaleItem(),
         const _ThemeItem(),
         const _BackupItem(),

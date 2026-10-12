@@ -4,6 +4,9 @@
 
 # FlClash
 
+This fork adds IP-Link residential SOCKS5 routing (modified 2026-10-11).
+See [IP_LINK.md](IP_LINK.md) for setup, behavior, and validation boundaries.
+
 A multi-platform proxy client based on ClashMeta. Simple to use, open source and ad-free.
 
 **English** · [简体中文](README_zh_CN.md)

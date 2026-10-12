@@ -965,6 +965,53 @@ class MessageLookup extends MessageLookupByLibrary {
       "このページには変更があります。リセットしてもよろしいですか？",
     ),
     "resetTip": MessageLookupByLibrary.simpleMessage("リセットしてもよろしいですか？"),
+    "residentialRouteConnect": MessageLookupByLibrary.simpleMessage("保存して接続"),
+    "residentialRouteDescription": MessageLookupByLibrary.simpleMessage(
+      "通信を空港ノードから住宅 SOCKS5 に中継します。DIRECT と拒否ルールを維持します。設定は現在のプロファイルに保存され、購読更新後も適用されます。追加アプリは不要です。",
+    ),
+    "residentialRouteEnabled": MessageLookupByLibrary.simpleMessage(
+      "住宅プロキシを有効にする",
+    ),
+    "residentialRouteEndpointError": MessageLookupByLibrary.simpleMessage(
+      "アドレス、ポート、認証情報、中継ノードを確認してください。",
+    ),
+    "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
+      "接続を確認できません。SOCKS5 情報、中継ノード、現在のプロファイルを確認してください。設定は保存されています。",
+    ),
+    "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
+      "先にプロファイルをインポートして選択してください。設定を読み込めない場合は接続前に確認してください。",
+    ),
+    "residentialRouteParse": MessageLookupByLibrary.simpleMessage("URL から入力"),
+    "residentialRoutePassword": MessageLookupByLibrary.simpleMessage("パスワード"),
+    "residentialRoutePort": MessageLookupByLibrary.simpleMessage("ポート"),
+    "residentialRouteSave": MessageLookupByLibrary.simpleMessage("設定を保存して適用"),
+    "residentialRouteSaved": MessageLookupByLibrary.simpleMessage(
+      "設定を保存して適用しました。無効にすると元のルーティングに戻ります。",
+    ),
+    "residentialRouteServer": MessageLookupByLibrary.simpleMessage(
+      "住宅プロキシのサーバー",
+    ),
+    "residentialRouteShowPassword": MessageLookupByLibrary.simpleMessage(
+      "パスワードを表示",
+    ),
+    "residentialRouteTitle": MessageLookupByLibrary.simpleMessage(
+      "住宅プロキシ · IP-Link",
+    ),
+    "residentialRouteTransit": MessageLookupByLibrary.simpleMessage("中継ノード"),
+    "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
+      "具体的なノードを選択してください。プロバイダーのみの設定では、先に接続してこの画面を開き直してください。",
+    ),
+    "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
+      "SOCKS5 URL（任意）",
+    ),
+    "residentialRouteUrlError": MessageLookupByLibrary.simpleMessage(
+      "socks5://username:password@host:port を入力してください。特殊文字はパーセントエンコードしてください。",
+    ),
+    "residentialRouteUsername": MessageLookupByLibrary.simpleMessage("ユーザー名"),
+    "residentialRouteVerified": MessageLookupByLibrary.simpleMessage(
+      "住宅プロキシの接続テストに成功しました。この画面を閉じても Clash はバックグラウンドで動作します。",
+    ),
+    "residentialRouteWorking": MessageLookupByLibrary.simpleMessage("保存・適用中…"),
     "resources": MessageLookupByLibrary.simpleMessage("リソース"),
     "respectRules": MessageLookupByLibrary.simpleMessage("ルールに従う"),
     "respectRulesDesc": MessageLookupByLibrary.simpleMessage(

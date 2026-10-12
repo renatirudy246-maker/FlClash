@@ -6447,6 +6447,216 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Residential route · IP-Link`
+  String get residentialRouteTitle {
+    return Intl.message(
+      'Residential route · IP-Link',
+      name: 'residentialRouteTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Route proxied traffic through an airport node, then your residential SOCKS5 proxy. Existing DIRECT and rejection rules remain. Settings belong to the current airport profile and survive subscription updates. No companion app is needed.`
+  String get residentialRouteDescription {
+    return Intl.message(
+      'Route proxied traffic through an airport node, then your residential SOCKS5 proxy. Existing DIRECT and rejection rules remain. Settings belong to the current airport profile and survive subscription updates. No companion app is needed.',
+      name: 'residentialRouteDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enable residential route`
+  String get residentialRouteEnabled {
+    return Intl.message(
+      'Enable residential route',
+      name: 'residentialRouteEnabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SOCKS5 URL (optional)`
+  String get residentialRouteUrl {
+    return Intl.message(
+      'SOCKS5 URL (optional)',
+      name: 'residentialRouteUrl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fill fields from URL`
+  String get residentialRouteParse {
+    return Intl.message(
+      'Fill fields from URL',
+      name: 'residentialRouteParse',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Residential server`
+  String get residentialRouteServer {
+    return Intl.message(
+      'Residential server',
+      name: 'residentialRouteServer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Port`
+  String get residentialRoutePort {
+    return Intl.message(
+      'Port',
+      name: 'residentialRoutePort',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Username`
+  String get residentialRouteUsername {
+    return Intl.message(
+      'Username',
+      name: 'residentialRouteUsername',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password`
+  String get residentialRoutePassword {
+    return Intl.message(
+      'Password',
+      name: 'residentialRoutePassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show password`
+  String get residentialRouteShowPassword {
+    return Intl.message(
+      'Show password',
+      name: 'residentialRouteShowPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Airport transit node`
+  String get residentialRouteTransit {
+    return Intl.message(
+      'Airport transit node',
+      name: 'residentialRouteTransit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose a concrete airport node. For provider-only profiles, first connect the airport and reopen this page to load its nodes.`
+  String get residentialRouteTransitHelp {
+    return Intl.message(
+      'Choose a concrete airport node. For provider-only profiles, first connect the airport and reopen this page to load its nodes.',
+      name: 'residentialRouteTransitHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save and connect`
+  String get residentialRouteConnect {
+    return Intl.message(
+      'Save and connect',
+      name: 'residentialRouteConnect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save / apply settings`
+  String get residentialRouteSave {
+    return Intl.message(
+      'Save / apply settings',
+      name: 'residentialRouteSave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Saving and applying…`
+  String get residentialRouteWorking {
+    return Intl.message(
+      'Saving and applying…',
+      name: 'residentialRouteWorking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings saved and applied. Disabling restores the airport profile's routing.`
+  String get residentialRouteSaved {
+    return Intl.message(
+      'Settings saved and applied. Disabling restores the airport profile\'s routing.',
+      name: 'residentialRouteSaved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Residential chain test passed. You may close this page; keep Clash running in the background.`
+  String get residentialRouteVerified {
+    return Intl.message(
+      'Residential chain test passed. You may close this page; keep Clash running in the background.',
+      name: 'residentialRouteVerified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not confirm the residential chain. Check the SOCKS5 details, transit node and current airport profile. Saved settings are retained.`
+  String get residentialRouteFailed {
+    return Intl.message(
+      'Could not confirm the residential chain. Check the SOCKS5 details, transit node and current airport profile. Saved settings are retained.',
+      name: 'residentialRouteFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid SOCKS5 URL. Use socks5://username:password@host:port; percent-encode special characters.`
+  String get residentialRouteUrlError {
+    return Intl.message(
+      'Invalid SOCKS5 URL. Use socks5://username:password@host:port; percent-encode special characters.',
+      name: 'residentialRouteUrlError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check the residential address, port, credentials and transit node.`
+  String get residentialRouteEndpointError {
+    return Intl.message(
+      'Check the residential address, port, credentials and transit node.',
+      name: 'residentialRouteEndpointError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import and select an airport profile first. If settings cannot be read, inspect the local configuration before connecting.`
+  String get residentialRouteLoadError {
+    return Intl.message(
+      'Import and select an airport profile first. If settings cannot be read, inspect the local configuration before connecting.',
+      name: 'residentialRouteLoadError',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

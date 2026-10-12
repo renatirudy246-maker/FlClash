@@ -5,9 +5,11 @@ import 'dart:io';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
+import 'package:fl_clash/residential_route/config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
+import 'package:yaml/yaml.dart' show loadYaml;
 
 Future<T> decodeJSONTask<T>(String data) async {
   return compute<String, T>(_decodeJSON, data);
@@ -107,17 +109,19 @@ ClashConfig buildClashConfig(Map<String, dynamic> configMap) {
 }
 
 Future<({String yaml, String md5})> makeRealProfileTask(
-  MakeRealProfileState data,
-) async {
-  return compute<MakeRealProfileState, ({String yaml, String md5})>(
-    _makeRealProfileTask,
-    data,
-  );
+  MakeRealProfileState data, {
+  ResidentialRouteConfig? residentialRoute,
+}) async {
+  return compute<
+    ({MakeRealProfileState profile, ResidentialRouteConfig? residential}),
+    ({String yaml, String md5})
+  >(_makeRealProfileTask, (profile: data, residential: residentialRoute));
 }
 
 Future<({String yaml, String md5})> _makeRealProfileTask(
-  MakeRealProfileState data,
+  ({MakeRealProfileState profile, ResidentialRouteConfig? residential}) request,
 ) async {
+  final data = request.profile;
   final rawConfig = Map.from(data.rawConfig);
   final realPatchConfig = data.realPatchConfig;
   final profilesPath = data.profilesPath;
@@ -349,8 +353,56 @@ Future<({String yaml, String md5})> _makeRealProfileTask(
         .toList();
   }
   rawConfig['rules'] = rules;
-  final yaml = await _encodeYaml(Map<String, dynamic>.from(rawConfig));
+  final config = Map<String, dynamic>.from(rawConfig);
+  final residential = request.residential;
+  if (residential?.enabled == true) {
+    await _hydrateResidentialTransit(config, residential!);
+  }
+  final yaml = await _encodeYaml(request.residential?.apply(config) ?? config);
   return (yaml: yaml, md5: yaml.toMd5());
+}
+
+Future<void> _hydrateResidentialTransit(
+  Map<String, dynamic> config,
+  ResidentialRouteConfig route,
+) async {
+  final proxies = List<dynamic>.from(config['proxies'] as List? ?? []);
+  if (proxies.any((node) => node is Map && node['name'] == route.transit)) {
+    return;
+  }
+  final candidates = <Map<String, dynamic>>[];
+  for (final provider in (config['proxy-providers'] as Map? ?? {}).values) {
+    if (provider is! Map || provider['path'] is! String) continue;
+    final file = File(provider['path'] as String);
+    if (!await file.exists()) continue;
+    try {
+      final cached = loadYaml(await file.readAsString());
+      if (cached is! Map || cached['proxies'] is! List) continue;
+      final overrides = provider['override'] as Map? ?? const {};
+      for (final node in cached['proxies'] as List) {
+        if (node is! Map || node['name'] is! String) continue;
+        final name =
+            '${overrides['additional-prefix'] ?? ''}${node['name']}${overrides['additional-suffix'] ?? ''}';
+        if (name != route.transit) continue;
+        candidates.add({
+          ...Map<String, dynamic>.from(node),
+          for (final entry in overrides.entries)
+            if (entry.key != 'additional-prefix' &&
+                entry.key != 'additional-suffix')
+              entry.key as String: entry.value,
+          'name': name,
+        });
+      }
+    } catch (_) {
+      throw const FormatException('Airport provider cache could not be read');
+    }
+  }
+  if (candidates.length != 1) {
+    throw const FormatException(
+      'Airport transit node is missing or ambiguous; load the original airport profile first',
+    );
+  }
+  config['proxies'] = [...proxies, candidates.single];
 }
 
 typedef ShakingStoreArgs = ({

@@ -862,6 +862,49 @@ class MessageLookup extends MessageLookupByLibrary {
       "当前页面存在更改，确定重置吗？",
     ),
     "resetTip": MessageLookupByLibrary.simpleMessage("确定要重置吗？"),
+    "residentialRouteConnect": MessageLookupByLibrary.simpleMessage("保存并连接"),
+    "residentialRouteDescription": MessageLookupByLibrary.simpleMessage(
+      "让代理流量先经过机场节点，再从住宅 SOCKS5 出口访问网站。原有直连和拒绝规则保留。设置绑定当前机场配置，订阅更新后继续生效，无需额外小工具。",
+    ),
+    "residentialRouteEnabled": MessageLookupByLibrary.simpleMessage("启用住宅转接"),
+    "residentialRouteEndpointError": MessageLookupByLibrary.simpleMessage(
+      "请检查住宅地址、端口、账号密码和中转节点。",
+    ),
+    "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
+      "未能确认住宅链路，请检查 SOCKS5 信息、中转节点及当前机场配置。已保存的设置仍保留。",
+    ),
+    "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
+      "请先导入并选择机场配置。如果本地设置读取失败，请先检查配置再连接。",
+    ),
+    "residentialRouteParse": MessageLookupByLibrary.simpleMessage("从链接填写"),
+    "residentialRoutePassword": MessageLookupByLibrary.simpleMessage("密码"),
+    "residentialRoutePort": MessageLookupByLibrary.simpleMessage("端口"),
+    "residentialRouteSave": MessageLookupByLibrary.simpleMessage("保存并应用设置"),
+    "residentialRouteSaved": MessageLookupByLibrary.simpleMessage(
+      "设置已保存并应用。关闭转接后恢复机场原有分流。",
+    ),
+    "residentialRouteServer": MessageLookupByLibrary.simpleMessage("住宅代理地址"),
+    "residentialRouteShowPassword": MessageLookupByLibrary.simpleMessage(
+      "显示密码",
+    ),
+    "residentialRouteTitle": MessageLookupByLibrary.simpleMessage(
+      "住宅转接 · IP-Link",
+    ),
+    "residentialRouteTransit": MessageLookupByLibrary.simpleMessage("机场中转节点"),
+    "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
+      "请选择具体机场节点。只有节点提供者的配置，请先连接机场，再重新打开此页面读取节点。",
+    ),
+    "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
+      "SOCKS5 链接（可选）",
+    ),
+    "residentialRouteUrlError": MessageLookupByLibrary.simpleMessage(
+      "SOCKS5 链接格式不正确，请使用 socks5://用户名:密码@地址:端口，特殊字符需进行百分号编码。",
+    ),
+    "residentialRouteUsername": MessageLookupByLibrary.simpleMessage("用户名"),
+    "residentialRouteVerified": MessageLookupByLibrary.simpleMessage(
+      "住宅链路测试通过。可以关闭此页面，保留 Clash 在后台运行。",
+    ),
+    "residentialRouteWorking": MessageLookupByLibrary.simpleMessage("正在保存和应用…"),
     "resources": MessageLookupByLibrary.simpleMessage("资源"),
     "respectRules": MessageLookupByLibrary.simpleMessage("遵守规则"),
     "respectRulesDesc": MessageLookupByLibrary.simpleMessage(

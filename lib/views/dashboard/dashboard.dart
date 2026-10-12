@@ -6,6 +6,7 @@ import 'package:fl_clash/core/core.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/icons/icons.dart';
 import 'package:fl_clash/providers/providers.dart';
+import 'package:fl_clash/views/residential_route.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,6 +75,16 @@ class _DashboardViewState extends ConsumerState<DashboardView>
 
   List<Widget> _buildActions(bool isEdit) {
     return [
+      if (!isEdit)
+        IconButton(
+          tooltip: context.appLocalizations.residentialRouteTitle,
+          icon: const GlyphIcon(AppGlyphs.link),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => const ResidentialRouteView(),
+            ),
+          ),
+        ),
       if (!isEdit && coreLib == null) const CoreStatusButton(),
       if (isEdit)
         ValueListenableBuilder(

@@ -755,9 +755,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputRuleContent": MessageLookupByLibrary.simpleMessage(
       "Введите содержимое правила",
     ),
-    "installedAppsPermissionDeniedMessage": MessageLookupByLibrary.simpleMessage(
-      "Разрешение на список приложений отклонено, поэтому установленные приложения недоступны. Предоставьте его вручную в системных настройках.",
-    ),
+    "installedAppsPermissionDeniedMessage":
+        MessageLookupByLibrary.simpleMessage(
+          "Разрешение на список приложений отклонено, поэтому установленные приложения недоступны. Предоставьте его вручную в системных настройках.",
+        ),
     "installedAppsPermissionDesc": MessageLookupByLibrary.simpleMessage(
       "Эта система не выдаёт список установленных приложений без разрешения. Предоставьте его, чтобы настроить прокси для отдельных приложений.",
     ),
@@ -1191,6 +1192,65 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "resetTip": MessageLookupByLibrary.simpleMessage(
       "Вы уверены, что хотите выполнить сброс?",
+    ),
+    "residentialRouteConnect": MessageLookupByLibrary.simpleMessage(
+      "Сохранить и подключить",
+    ),
+    "residentialRouteDescription": MessageLookupByLibrary.simpleMessage(
+      "Направляет трафик через узел провайдера, затем через резидентный SOCKS5. Правила DIRECT и блокировки сохраняются. Настройки привязаны к текущему профилю и сохраняются при обновлении подписки. Отдельное приложение не нужно.",
+    ),
+    "residentialRouteEnabled": MessageLookupByLibrary.simpleMessage(
+      "Включить резидентный прокси",
+    ),
+    "residentialRouteEndpointError": MessageLookupByLibrary.simpleMessage(
+      "Проверьте адрес, порт, учётные данные и транзитный узел.",
+    ),
+    "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
+      "Не удалось подтвердить соединение. Проверьте SOCKS5, транзитный узел и текущий профиль. Настройки сохранены.",
+    ),
+    "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
+      "Сначала импортируйте и выберите профиль. Если настройки не читаются, проверьте их перед подключением.",
+    ),
+    "residentialRouteParse": MessageLookupByLibrary.simpleMessage(
+      "Заполнить из URL",
+    ),
+    "residentialRoutePassword": MessageLookupByLibrary.simpleMessage("Пароль"),
+    "residentialRoutePort": MessageLookupByLibrary.simpleMessage("Порт"),
+    "residentialRouteSave": MessageLookupByLibrary.simpleMessage(
+      "Сохранить и применить",
+    ),
+    "residentialRouteSaved": MessageLookupByLibrary.simpleMessage(
+      "Настройки сохранены и применены. Отключение восстанавливает исходную маршрутизацию.",
+    ),
+    "residentialRouteServer": MessageLookupByLibrary.simpleMessage(
+      "Адрес резидентного прокси",
+    ),
+    "residentialRouteShowPassword": MessageLookupByLibrary.simpleMessage(
+      "Показать пароль",
+    ),
+    "residentialRouteTitle": MessageLookupByLibrary.simpleMessage(
+      "Резидентный прокси · IP-Link",
+    ),
+    "residentialRouteTransit": MessageLookupByLibrary.simpleMessage(
+      "Транзитный узел",
+    ),
+    "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
+      "Выберите конкретный узел. Для профиля только с провайдерами сначала подключитесь, затем откройте эту страницу снова.",
+    ),
+    "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
+      "SOCKS5 URL (необязательно)",
+    ),
+    "residentialRouteUrlError": MessageLookupByLibrary.simpleMessage(
+      "Используйте socks5://username:password@host:port; специальные символы кодируйте процентным кодированием.",
+    ),
+    "residentialRouteUsername": MessageLookupByLibrary.simpleMessage(
+      "Имя пользователя",
+    ),
+    "residentialRouteVerified": MessageLookupByLibrary.simpleMessage(
+      "Проверка цепочки успешна. Можно закрыть страницу; Clash должен работать в фоне.",
+    ),
+    "residentialRouteWorking": MessageLookupByLibrary.simpleMessage(
+      "Сохранение и применение…",
     ),
     "resources": MessageLookupByLibrary.simpleMessage("Ресурсы"),
     "respectRules": MessageLookupByLibrary.simpleMessage("Соблюдать правила"),
