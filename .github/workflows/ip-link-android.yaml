@@ -45,6 +45,7 @@ jobs:
       - name: Install Android build tools
         run: |
           sdkmanager 'platforms;android-37.0' 'build-tools;36.0.0' 'ndk;28.2.13676358' 'cmake;3.22.1'
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/28.2.13676358" >> "$GITHUB_ENV"
           sudo apt-get update
           sudo apt-get install -y libclang-18-dev
           test -e /usr/lib/llvm-18/lib/libclang.so
@@ -83,6 +84,33 @@ jobs:
 
       - name: Prepare install package
         run: |
+          python3 - <<'PY'
+          import struct, zipfile
+          apk = 'build/app/outputs/flutter-apk/app-arm64-v8a-release.apk'
+          with zipfile.ZipFile(apk) as z:
+              libs = [n for n in z.namelist() if n.endswith('.so')]
+              assert libs
+              for name in libs:
+                  data = z.read(name)
+                  assert struct.unpack_from('<H', data, 18)[0] == 183, name
+                  offset = struct.unpack_from('<Q', data, 32)[0]
+                  size, count = struct.unpack_from('<HH', data, 54)
+                  headers = [struct.unpack_from('<IIQQQQQQ', data, offset + i * size) for i in range(count)]
+                  loads = [h for h in headers if h[0] == 1]
+                  assert loads and all(h[7] >= 16384 for h in loads), name
+                  relro = [h for h in headers if h[0] == 0x6474e552]
+                  shoff = struct.unpack_from('<Q', data, 40)[0]
+                  shsize, shcount = struct.unpack_from('<HH', data, 58)
+                  sections = [struct.unpack_from('<IIQQQQIIQQ', data, shoff + i * shsize) for i in range(shcount)]
+                  writable = [s for s in sections if s[2] & 3 == 3 and s[5]]
+                  for h in relro:
+                      start, end = h[3], h[3] + h[6]
+                      rounded_start = start // 16384 * 16384
+                      rounded_end = (end + 16383) // 16384 * 16384
+                      padding = [(rounded_start, start), (end, rounded_end)]
+                      assert not any(a < b and s[3] < b and s[3] + s[5] > a for a, b in padding for s in writable), name
+                  print('ARM64 and 16KB alignment verified:', name)
+          PY
           mkdir -p dist
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk dist/FlClash-IP-Link-arm64.apk
           cp IP_LINK.md LICENSE dist/

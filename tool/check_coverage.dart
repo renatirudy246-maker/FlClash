@@ -24,6 +24,7 @@ const _groupFloors = <String, double>{
   'features': 81.0,
   'models': 67.0,
   'providers': 73.0,
+  'residential_route': 88.0,
   'common': 74.0,
   'manager': 68.0,
   'views': 66.0,
