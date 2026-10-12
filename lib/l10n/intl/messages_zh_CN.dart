@@ -117,21 +117,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m45(count) => "${count} 个代理";
 
-  static String m46(count) => "${count} 条规则";
+  static String m46(node) => "当前代理出口：${node}";
 
-  static String m47(appName) => "${appName}（安全模式）";
+  static String m47(count) => "${count} 条规则";
 
-  static String m48(count) => "${count} 秒";
+  static String m48(appName) => "${appName}（安全模式）";
 
-  static String m49(count) => "已选择 ${count} 项";
+  static String m49(count) => "${count} 秒";
 
-  static String m50(time) => "检测于 ${time}";
+  static String m50(count) => "已选择 ${count} 项";
 
-  static String m51(label) => "${label}只能是一项";
+  static String m51(time) => "检测于 ${time}";
 
-  static String m52(label) => "${label}必须为URL";
+  static String m52(label) => "${label}只能是一项";
 
-  static String m53(count) => "${count} 年前";
+  static String m53(label) => "${label}必须为URL";
+
+  static String m54(count) => "${count} 年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -862,6 +864,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "当前页面存在更改，确定重置吗？",
     ),
     "resetTip": MessageLookupByLibrary.simpleMessage("确定要重置吗？"),
+    "residentialRouteActive": m46,
     "residentialRouteAirportUnavailable": MessageLookupByLibrary.simpleMessage(
       "住宅节点已生成，配置已应用；机场中转节点未通过测试，请先确认原机场节点可连接及测试网址可访问，再测试住宅链路。",
     ),
@@ -869,6 +872,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "住宅配置未能应用，尚未确认连接。请检查当前机场配置与日志；保存的设置仍保留。",
     ),
     "residentialRouteConnect": MessageLookupByLibrary.simpleMessage("保存并连接"),
+    "residentialRouteDelayFailed": MessageLookupByLibrary.simpleMessage(
+      "延迟测试未完成，请保持 Clash 运行后重试。",
+    ),
     "residentialRouteDescription": MessageLookupByLibrary.simpleMessage(
       "让代理流量先经过机场节点，再从住宅 SOCKS5 出口访问网站。原有直连和拒绝规则保留。设置绑定当前机场配置，订阅更新后继续生效，无需额外小工具。",
     ),
@@ -879,8 +885,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
       "保存或应用配置时发生错误，尚未确认连接。请检查当前机场配置和日志；不会展示账号密码。",
     ),
+    "residentialRouteGroupHelp": MessageLookupByLibrary.simpleMessage(
+      "代理规则走此住宅节点；机场分组记住的选择独立保留。原有直连和拒绝规则仍然生效。",
+    ),
     "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
       "请先导入并选择机场配置。如果本地设置读取失败，请先检查配置再连接。",
+    ),
+    "residentialRouteNotSelected": MessageLookupByLibrary.simpleMessage(
+      "尚未确认住宅出口，请在 IP-Link Residential 分组选择住宅节点。",
+    ),
+    "residentialRouteOtherMode": MessageLookupByLibrary.simpleMessage(
+      "当前不是规则模式，仅选中住宅分组不能确认当前出口。",
     ),
     "residentialRouteParse": MessageLookupByLibrary.simpleMessage("从链接填写"),
     "residentialRoutePassword": MessageLookupByLibrary.simpleMessage("密码"),
@@ -899,6 +914,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteShowPassword": MessageLookupByLibrary.simpleMessage(
       "显示密码",
     ),
+    "residentialRouteStopped": MessageLookupByLibrary.simpleMessage(
+      "Clash 未运行，住宅链路尚未生效。",
+    ),
     "residentialRouteTitle": MessageLookupByLibrary.simpleMessage(
       "住宅转接 · IP-Link",
     ),
@@ -906,16 +924,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "机场中转节点（可多选）",
     ),
     "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
-      "仅为勾选的节点新增“原节点名 住宅-标识”，原节点保留。连接时选择第一个勾选项，之后在代理页的 IP-Link Residential 分组切换。只有节点提供者的配置，请先连接机场，再重新打开此页面。",
+      "点击卡片多选机场中转节点。卡片延迟是机场节点的延迟；IP-Link Residential 分组的测速是完整住宅链路的延迟。只为选中的节点生成住宅版本，原节点保留在机场分组。连接时选择第一个已选住宅节点，之后在 IP-Link Residential 分组切换。只有节点提供者的配置，请先连接机场再打开此页面。",
     ),
     "residentialRouteUnverified": MessageLookupByLibrary.simpleMessage(
       "住宅节点已生成，配置已应用；机场测试通过，但住宅链路测试失败。请检查 SOCKS5 地址、端口和认证，或在代理页换一个住宅节点。测试失败不等于账号密码一定有误。",
     ),
-    "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
-      "SOCKS5 链接（可选）",
-    ),
+    "residentialRouteUrl": MessageLookupByLibrary.simpleMessage("SOCKS5 链接"),
     "residentialRouteUrlError": MessageLookupByLibrary.simpleMessage(
       "SOCKS5 链接格式不正确，请使用 socks5://用户名:密码@地址:端口，特殊字符需进行百分号编码。",
+    ),
+    "residentialRouteUrlHelp": MessageLookupByLibrary.simpleMessage(
+      "粘贴完整的 socks5://用户名:密码@地址:端口 链接，保存时自动解析地址、端口和账号密码。链接默认隐藏。",
     ),
     "residentialRouteUsername": MessageLookupByLibrary.simpleMessage("用户名"),
     "residentialRouteVerified": MessageLookupByLibrary.simpleMessage(
@@ -1047,10 +1066,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "ruleSet": MessageLookupByLibrary.simpleMessage("规则集"),
     "ruleTarget": MessageLookupByLibrary.simpleMessage("规则目标"),
     "rules": MessageLookupByLibrary.simpleMessage("规则"),
-    "rulesCount": m46,
+    "rulesCount": m47,
     "runTime": MessageLookupByLibrary.simpleMessage("启动时间"),
     "safeMode": MessageLookupByLibrary.simpleMessage("安全模式"),
-    "safeModeAppTitle": m47,
+    "safeModeAppTitle": m48,
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("是否保存更改？"),
     "script": MessageLookupByLibrary.simpleMessage("脚本"),
@@ -1060,7 +1079,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "scrollToSelected": MessageLookupByLibrary.simpleMessage("滚动到已选"),
     "search": MessageLookupByLibrary.simpleMessage("搜索"),
     "seconds": MessageLookupByLibrary.simpleMessage("秒"),
-    "secondsCount": m48,
+    "secondsCount": m49,
     "selectAll": MessageLookupByLibrary.simpleMessage("全选"),
     "selectProxies": MessageLookupByLibrary.simpleMessage("选择代理"),
     "selectProxyProviders": MessageLookupByLibrary.simpleMessage("选择代理集"),
@@ -1068,13 +1087,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectSplitStrategy": MessageLookupByLibrary.simpleMessage("请选择分流策略"),
     "selectSubRule": MessageLookupByLibrary.simpleMessage("请选择子规则"),
     "selected": MessageLookupByLibrary.simpleMessage("已选择"),
-    "selectedCountTitle": m49,
+    "selectedCountTitle": m50,
     "server": MessageLookupByLibrary.simpleMessage("服务器"),
     "serviceAvailable": MessageLookupByLibrary.simpleMessage("可用"),
     "serviceBlocked": MessageLookupByLibrary.simpleMessage("已被封禁"),
     "serviceCheck": MessageLookupByLibrary.simpleMessage("检测"),
     "serviceCheckAll": MessageLookupByLibrary.simpleMessage("全部检测"),
-    "serviceCheckedAt": m50,
+    "serviceCheckedAt": m51,
     "serviceComingSoon": MessageLookupByLibrary.simpleMessage("即将上线"),
     "serviceDisallowedIsp": MessageLookupByLibrary.simpleMessage("不允许的 ISP"),
     "serviceFailed": MessageLookupByLibrary.simpleMessage("检测失败"),
@@ -1099,7 +1118,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "silentLaunch": MessageLookupByLibrary.simpleMessage("静默启动"),
     "silentLaunchDesc": MessageLookupByLibrary.simpleMessage("启动时不显示窗口"),
     "singleAdd": MessageLookupByLibrary.simpleMessage("单条添加"),
-    "singleValueTip": m51,
+    "singleValueTip": m52,
     "size": MessageLookupByLibrary.simpleMessage("尺寸"),
     "slide": MessageLookupByLibrary.simpleMessage("滑动"),
     "socksPort": MessageLookupByLibrary.simpleMessage("Socks端口"),
@@ -1179,7 +1198,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload": MessageLookupByLibrary.simpleMessage("上传"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage("通过URL获取配置文件"),
-    "urlTip": m52,
+    "urlTip": m53,
     "useHosts": MessageLookupByLibrary.simpleMessage("使用Hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("使用系统Hosts"),
     "usedTraffic": MessageLookupByLibrary.simpleMessage("已用流量"),
@@ -1200,7 +1219,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "writeToSystemDesc": MessageLookupByLibrary.simpleMessage(
       "同时设置系统时钟，Android上不生效",
     ),
-    "yearsAgo": m53,
+    "yearsAgo": m54,
     "yes": MessageLookupByLibrary.simpleMessage("是"),
     "zhCN": MessageLookupByLibrary.simpleMessage("中文简体"),
   };

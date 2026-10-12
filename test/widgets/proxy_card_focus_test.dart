@@ -16,6 +16,12 @@ const _testUrl = 'https://example.com/generate_204';
 
 class _RecordingProxiesAction extends ProxiesAction {
   static final List<String> tested = [];
+  static final List<String> changed = [];
+
+  @override
+  void changeProxyDebounce(String groupName, String proxyName) {
+    changed.add(proxyName);
+  }
 
   @override
   Future<void> proxyDelayTest(Proxy proxy, [String? testUrl]) async {
@@ -30,6 +36,7 @@ void main() {
 
   setUp(() {
     _RecordingProxiesAction.tested.clear();
+    _RecordingProxiesAction.changed.clear();
     container = ProviderContainer(
       overrides: [
         profilesProvider.overrideWith(TestProfiles.new),
@@ -79,6 +86,56 @@ void main() {
     );
     await tester.pumpAndSettle();
   }
+
+  testWidgets(
+    'picker cards share delay data without changing the active proxy',
+    (tester) async {
+      var picked = 0;
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: TestApp(
+            homeBuilder: (child) => Scaffold(body: child),
+            child: SizedBox(
+              height: 120,
+              child: ProxyCard(
+                groupName: 'group',
+                testUrl: _testUrl,
+                proxy: const Proxy(name: 'proxy 0', type: 'Shadowsocks'),
+                groupType: GroupType.Selector,
+                type: ProxyCardType.shrink,
+                selectionOverride: true,
+                onSelectionChanged: () => picked++,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('123 ms'), findsOneWidget);
+      expect(find.text('Shadowsocks'), findsOneWidget);
+      expect(
+        tester.widget<CommonCard>(find.byType(CommonCard)).isSelected,
+        true,
+      );
+      await tester.tap(find.text('proxy 0'));
+      await tester.pump();
+      expect(picked, 1);
+      expect(_RecordingProxiesAction.changed, isEmpty);
+      await tester.tap(find.text('123 ms'));
+      await tester.pump();
+      expect(_RecordingProxiesAction.tested, ['proxy 0']);
+    },
+  );
+
+  testWidgets('ordinary proxy cards retain their existing selection action', (
+    tester,
+  ) async {
+    await pumpCards(tester, ProxyCardType.shrink);
+    await tester.tap(find.text('proxy 0'));
+    await tester.pump();
+    expect(_RecordingProxiesAction.changed, ['proxy 0']);
+  });
 
   Future<void> focusCard(WidgetTester tester, int index) async {
     for (var attempt = 0; attempt < 10; attempt++) {

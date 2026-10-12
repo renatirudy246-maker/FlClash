@@ -3,6 +3,8 @@ import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/icons/icons.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
+import 'package:fl_clash/residential_route/config.dart';
+import 'package:fl_clash/residential_route/status.dart';
 import 'package:fl_clash/views/proxies/list.dart';
 import 'package:fl_clash/views/proxies/providers.dart';
 import 'package:fl_clash/widgets/widgets.dart';
@@ -121,6 +123,13 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> {
       proxiesStyleSettingProvider.select((state) => state.type),
     );
     final isLoading = ref.watch(loadingProvider(LoadingTag.proxies));
+    final body = switch (proxiesType) {
+      ProxiesType.tab => ProxiesTabView(key: _proxiesTabKey),
+      ProxiesType.list => const ProxiesListView(),
+    };
+    final hasResidential =
+        ref.watch(groupsProvider).getGroup(ResidentialRouteConfig.routeName) !=
+        null;
     return CommonScaffold(
       isLoading: isLoading,
       resizeToAvoidBottomInset: false,
@@ -138,10 +147,16 @@ class _ProxiesViewState extends ConsumerState<ProxiesView> {
       menuItems: _buildMenuItems(context),
       title: context.appLocalizations.proxies,
       searchState: AppBarSearchState(onSearch: _onSearch),
-      body: switch (proxiesType) {
-        ProxiesType.tab => ProxiesTabView(key: _proxiesTabKey),
-        ProxiesType.list => const ProxiesListView(),
-      },
+      body: hasResidential
+          ? AppBarClearance(
+              child: Column(
+                children: [
+                  const ResidentialRouteStatus(),
+                  Expanded(child: body),
+                ],
+              ),
+            )
+          : body,
     );
   }
 }

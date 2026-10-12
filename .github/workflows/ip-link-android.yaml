@@ -64,7 +64,7 @@ jobs:
           p = Path('pubspec.yaml')
           p.write_text(p.read_text().replace('build_assets: true', 'build_assets: false'))
           PY
-          flutter test --reporter expanded test/common/residential_route_test.dart test/common/residential_route_task_test.dart test/common/residential_route_connection_test.dart test/widgets/residential_route_editor_test.dart test/widgets/residential_route_view_test.dart test/providers/setup_action_test.dart
+          flutter test --reporter expanded test/common/residential_route_test.dart test/common/residential_route_task_test.dart test/common/residential_route_connection_test.dart test/widgets/residential_route_editor_test.dart test/widgets/residential_route_view_test.dart test/widgets/residential_route_status_test.dart test/widgets/proxy_card_focus_test.dart test/providers/setup_action_test.dart
 
       - name: Build ARM64 APK
         run: |

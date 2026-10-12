@@ -54,15 +54,19 @@ class ResidentialRouteConfig {
       throw const FormatException('Use socks5://username:password@host:port');
     }
     final separator = uri.userInfo.indexOf(':');
-    if (separator < 1) {
+    if (uri.userInfo.isNotEmpty && separator < 1) {
       throw const FormatException('SOCKS5 URL needs a username and password');
     }
     try {
       final config = ResidentialRouteConfig(
         server: uri.host,
         port: uri.port,
-        username: Uri.decodeComponent(uri.userInfo.substring(0, separator)),
-        password: Uri.decodeComponent(uri.userInfo.substring(separator + 1)),
+        username: uri.userInfo.isEmpty
+            ? ''
+            : Uri.decodeComponent(uri.userInfo.substring(0, separator)),
+        password: uri.userInfo.isEmpty
+            ? ''
+            : Uri.decodeComponent(uri.userInfo.substring(separator + 1)),
       );
       config.validateEndpoint();
       return config;
@@ -84,6 +88,15 @@ class ResidentialRouteConfig {
 
   List<String> get selectedTransits =>
       transits.isNotEmpty ? transits : (transit.isEmpty ? const [] : [transit]);
+
+  String get socksUrl {
+    if (server.isEmpty) return '';
+    final host = server.contains(':') ? '[$server]' : server;
+    final auth = username.isEmpty && password.isEmpty
+        ? ''
+        : '${Uri.encodeComponent(username)}:${Uri.encodeComponent(password)}@';
+    return 'socks5://$auth$host:$port';
+  }
 
   String nodeName(String name) {
     final host = server.trim();
@@ -189,7 +202,7 @@ class ResidentialRouteConfig {
     groups.add({
       'name': routeName,
       'type': 'select',
-      'proxies': [...selectedTransits.map(nodeName), ...selectedTransits],
+      'proxies': selectedTransits.map(nodeName).toList(),
     });
     config['proxy-groups'] = groups;
     config['mode'] = 'rule';

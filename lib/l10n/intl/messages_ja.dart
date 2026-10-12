@@ -120,21 +120,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m45(count) => "プロキシ ${count} 件";
 
-  static String m46(count) => "ルール ${count} 件";
+  static String m46(node) => "現在のプロキシ出口：${node}";
 
-  static String m47(appName) => "${appName}（セーフモード）";
+  static String m47(count) => "ルール ${count} 件";
 
-  static String m48(count) => "${count} 秒";
+  static String m48(appName) => "${appName}（セーフモード）";
 
-  static String m49(count) => "${count} 件選択中";
+  static String m49(count) => "${count} 秒";
 
-  static String m50(time) => "${time} に検査";
+  static String m50(count) => "${count} 件選択中";
 
-  static String m51(label) => "${label}は1項目のみ指定できます";
+  static String m51(time) => "${time} に検査";
 
-  static String m52(label) => "${label}はURLである必要があります";
+  static String m52(label) => "${label}は1項目のみ指定できます";
 
-  static String m53(count) => "${count} 年前";
+  static String m53(label) => "${label}はURLである必要があります";
+
+  static String m54(count) => "${count} 年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -965,6 +967,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "このページには変更があります。リセットしてもよろしいですか？",
     ),
     "resetTip": MessageLookupByLibrary.simpleMessage("リセットしてもよろしいですか？"),
+    "residentialRouteActive": m46,
     "residentialRouteAirportUnavailable": MessageLookupByLibrary.simpleMessage(
       "ノードを生成して設定を適用しましたが、中継テストは失敗しました。元のノードとテスト URL を確認してください。",
     ),
@@ -972,6 +975,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "住宅設定を適用できませんでした。接続は未確認で、保存した設定は保持されています。設定とログを確認してください。",
     ),
     "residentialRouteConnect": MessageLookupByLibrary.simpleMessage("保存して接続"),
+    "residentialRouteDelayFailed": MessageLookupByLibrary.simpleMessage(
+      "遅延テストに失敗しました。Clash を起動したまま再試行してください。",
+    ),
     "residentialRouteDescription": MessageLookupByLibrary.simpleMessage(
       "通信を空港ノードから住宅 SOCKS5 に中継します。DIRECT と拒否ルールを維持します。設定は現在のプロファイルに保存され、購読更新後も適用されます。追加アプリは不要です。",
     ),
@@ -984,8 +990,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
       "保存または適用に失敗しました。接続は未確認です。設定とログを確認してください。認証情報は表示しません。",
     ),
+    "residentialRouteGroupHelp": MessageLookupByLibrary.simpleMessage(
+      "プロキシルールはこの住宅ノードを使用します。元のグループの選択は独立して保持され、DIRECT と拒否ルールは維持されます。",
+    ),
     "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
       "先にプロファイルをインポートして選択してください。設定を読み込めない場合は接続前に確認してください。",
+    ),
+    "residentialRouteNotSelected": MessageLookupByLibrary.simpleMessage(
+      "住宅出口を確認できません。IP-Link Residential で住宅ノードを選択してください。",
+    ),
+    "residentialRouteOtherMode": MessageLookupByLibrary.simpleMessage(
+      "ルールモードではありません。住宅グループの選択だけでは現在の出口を確認できません。",
     ),
     "residentialRouteParse": MessageLookupByLibrary.simpleMessage("URL から入力"),
     "residentialRoutePassword": MessageLookupByLibrary.simpleMessage("パスワード"),
@@ -1006,6 +1021,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteShowPassword": MessageLookupByLibrary.simpleMessage(
       "パスワードを表示",
     ),
+    "residentialRouteStopped": MessageLookupByLibrary.simpleMessage(
+      "Clash は停止中です。住宅経路は無効です。",
+    ),
     "residentialRouteTitle": MessageLookupByLibrary.simpleMessage(
       "住宅プロキシ · IP-Link",
     ),
@@ -1013,16 +1031,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "中継ノード（複数選択）",
     ),
     "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
-      "選択したノードに住宅ノードを追加し、元のノードも残します。接続時は最初の選択を使用します。その後は IP-Link Residential グループで切り替えます。プロバイダーのみの設定では先に接続して画面を開き直してください。",
+      "カードをタップして中継ノードを複数選択します。カードの遅延は中継ノード、IP-Link Residential のテストは住宅経路全体を測定します。選択したノードにのみ住宅版を追加し、元のノードは元のグループに残ります。接続時は最初の住宅ノードを選択します。その後は IP-Link Residential で切り替えます。プロバイダーのみの構成は先に接続してからこの画面を開いてください。",
     ),
     "residentialRouteUnverified": MessageLookupByLibrary.simpleMessage(
       "ノードを生成して設定を適用しました。中継テストは成功しましたが、住宅接続テストは失敗しました。SOCKS5 情報を確認するか別の住宅ノードを選択してください。認証情報が原因とは限りません。",
     ),
-    "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
-      "SOCKS5 URL（任意）",
-    ),
+    "residentialRouteUrl": MessageLookupByLibrary.simpleMessage("SOCKS5 リンク"),
     "residentialRouteUrlError": MessageLookupByLibrary.simpleMessage(
       "socks5://username:password@host:port を入力してください。特殊文字はパーセントエンコードしてください。",
+    ),
+    "residentialRouteUrlHelp": MessageLookupByLibrary.simpleMessage(
+      "socks5://ユーザー名:パスワード@ホスト:ポート の完全なリンクを貼り付けてください。保存時に自動解析されます。リンクは非表示のままです。",
     ),
     "residentialRouteUsername": MessageLookupByLibrary.simpleMessage("ユーザー名"),
     "residentialRouteVerified": MessageLookupByLibrary.simpleMessage(
@@ -1172,10 +1191,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "ruleSet": MessageLookupByLibrary.simpleMessage("ルールセット"),
     "ruleTarget": MessageLookupByLibrary.simpleMessage("ルールターゲット"),
     "rules": MessageLookupByLibrary.simpleMessage("ルール"),
-    "rulesCount": m46,
+    "rulesCount": m47,
     "runTime": MessageLookupByLibrary.simpleMessage("起動時間"),
     "safeMode": MessageLookupByLibrary.simpleMessage("セーフモード"),
-    "safeModeAppTitle": m47,
+    "safeModeAppTitle": m48,
     "save": MessageLookupByLibrary.simpleMessage("保存"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("変更を保存しますか？"),
     "script": MessageLookupByLibrary.simpleMessage("スクリプト"),
@@ -1185,7 +1204,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "scrollToSelected": MessageLookupByLibrary.simpleMessage("選択項目へスクロール"),
     "search": MessageLookupByLibrary.simpleMessage("検索"),
     "seconds": MessageLookupByLibrary.simpleMessage("秒"),
-    "secondsCount": m48,
+    "secondsCount": m49,
     "selectAll": MessageLookupByLibrary.simpleMessage("すべて選択"),
     "selectProxies": MessageLookupByLibrary.simpleMessage("プロキシを選択"),
     "selectProxyProviders": MessageLookupByLibrary.simpleMessage(
@@ -1197,13 +1216,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "selectSubRule": MessageLookupByLibrary.simpleMessage("サブルールを選択してください"),
     "selected": MessageLookupByLibrary.simpleMessage("選択済み"),
-    "selectedCountTitle": m49,
+    "selectedCountTitle": m50,
     "server": MessageLookupByLibrary.simpleMessage("サーバー"),
     "serviceAvailable": MessageLookupByLibrary.simpleMessage("利用可能"),
     "serviceBlocked": MessageLookupByLibrary.simpleMessage("ブロック済み"),
     "serviceCheck": MessageLookupByLibrary.simpleMessage("検査"),
     "serviceCheckAll": MessageLookupByLibrary.simpleMessage("すべて検査"),
-    "serviceCheckedAt": m50,
+    "serviceCheckedAt": m51,
     "serviceComingSoon": MessageLookupByLibrary.simpleMessage("近日提供予定"),
     "serviceDisallowedIsp": MessageLookupByLibrary.simpleMessage(
       "許可されていない ISP",
@@ -1234,7 +1253,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "起動時にウィンドウを表示しません",
     ),
     "singleAdd": MessageLookupByLibrary.simpleMessage("個別追加"),
-    "singleValueTip": m51,
+    "singleValueTip": m52,
     "size": MessageLookupByLibrary.simpleMessage("サイズ"),
     "slide": MessageLookupByLibrary.simpleMessage("スライド"),
     "socksPort": MessageLookupByLibrary.simpleMessage("SOCKSポート"),
@@ -1318,7 +1337,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload": MessageLookupByLibrary.simpleMessage("アップロード"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage("URLからプロファイルを取得します"),
-    "urlTip": m52,
+    "urlTip": m53,
     "useHosts": MessageLookupByLibrary.simpleMessage("Hostsを使用"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("システムのHostsを使用"),
     "usedTraffic": MessageLookupByLibrary.simpleMessage("使用済みトラフィック"),
@@ -1339,7 +1358,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "writeToSystemDesc": MessageLookupByLibrary.simpleMessage(
       "システムクロックも設定します。Androidでは無視されます",
     ),
-    "yearsAgo": m53,
+    "yearsAgo": m54,
     "yes": MessageLookupByLibrary.simpleMessage("はい"),
     "zhCN": MessageLookupByLibrary.simpleMessage("簡体字中国語"),
   };

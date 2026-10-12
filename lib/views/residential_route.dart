@@ -8,6 +8,8 @@ import 'package:fl_clash/residential_route/editor.dart';
 import 'package:fl_clash/residential_route/store.dart';
 import 'package:fl_clash/widgets/keyboard_inset_hold.dart';
 import 'package:fl_clash/widgets/scaffold.dart';
+import 'package:fl_clash/views/proxies/card.dart';
+import 'package:fl_clash/views/proxies/common.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -23,7 +25,7 @@ class _ResidentialRouteViewState extends ConsumerState<ResidentialRouteView> {
   late final _profile = ref.read(currentProfileProvider);
   late final _load = _loadSettings();
 
-  Future<({ResidentialRouteConfig config, List<String> nodes})>
+  Future<({ResidentialRouteConfig config, Map<String, Proxy> nodes})>
   _loadSettings() async {
     final profile = _profile;
     if (profile == null) throw const FormatException('No airport profile');
@@ -53,7 +55,23 @@ class _ResidentialRouteViewState extends ConsumerState<ResidentialRouteView> {
             'GLOBAL',
           }.contains(name.toUpperCase()),
     );
-    return (config: config, nodes: names.toList()..sort());
+    final proxies = <String, Proxy>{
+      for (final node in source['proxies'] as List? ?? [])
+        if (node is Map && node['name'] is String && node['type'] is String)
+          node['name'] as String: Proxy(
+            name: node['name'] as String,
+            type: node['type'] as String,
+          ),
+      for (final group in groups)
+        for (final node in group.all) node.name: node,
+    };
+    return (
+      config: config,
+      nodes: {
+        for (final name in names.toList()..sort())
+          name: proxies[name] ?? Proxy(name: name, type: '-'),
+      },
+    );
   }
 
   Future<ResidentialRouteOutcome> _save(
@@ -134,17 +152,29 @@ class _ResidentialRouteViewState extends ConsumerState<ResidentialRouteView> {
                   }
                   return ResidentialRouteEditor(
                     initial: data.config,
-                    nodes: data.nodes,
+                    nodes: data.nodes.keys.toList(),
+                    nodeHeight: getItemHeight(ProxyCardType.shrink),
+                    nodeBuilder: (_, name, selected, onTap) => ProxyCard(
+                      groupName: ResidentialRouteConfig.routeName,
+                      testUrl: null,
+                      proxy: data.nodes[name] ?? Proxy(name: name, type: '-'),
+                      groupType: GroupType.Selector,
+                      type: ProxyCardType.shrink,
+                      selectionOverride: selected,
+                      onSelectionChanged: onTap,
+                    ),
+                    onTestNodes: ref.watch(isStartProvider)
+                        ? () => ref
+                              .read(proxiesActionProvider.notifier)
+                              .delayTest(data.nodes.values.toList())
+                        : null,
                     labels: {
                       'description': text.residentialRouteDescription,
                       'enabled': text.residentialRouteEnabled,
                       'url': text.residentialRouteUrl,
-                      'parse': text.residentialRouteParse,
-                      'server': text.residentialRouteServer,
-                      'port': text.residentialRoutePort,
-                      'username': text.residentialRouteUsername,
-                      'password': text.residentialRoutePassword,
-                      'showPassword': text.residentialRouteShowPassword,
+                      'urlHelp': text.residentialRouteUrlHelp,
+                      'testNodes': text.delayTest,
+                      'delayFailed': text.residentialRouteDelayFailed,
                       'transit': text.residentialRouteTransit,
                       'transitHelp': text.residentialRouteTransitHelp,
                       'connect': text.residentialRouteConnect,

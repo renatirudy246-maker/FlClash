@@ -6478,10 +6478,10 @@ class AppLocalizations {
     );
   }
 
-  /// `SOCKS5 URL (optional)`
+  /// `SOCKS5 URL`
   String get residentialRouteUrl {
     return Intl.message(
-      'SOCKS5 URL (optional)',
+      'SOCKS5 URL',
       name: 'residentialRouteUrl',
       desc: '',
       args: [],
@@ -6558,10 +6558,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Only checked nodes gain a corresponding residential node; originals remain. Connect selects the first checked node. Switch in the IP-Link Residential proxy group afterward. For provider-only profiles, connect the airport first, then reopen this page.`
+  /// `Tap cards to select multiple airport nodes. Card latency measures the airport node; tests in IP-Link Residential measure the complete chain. Only selected nodes gain residential versions. Originals remain in their airport group. Connect selects the first selected residential node; switch in IP-Link Residential afterward. For provider-only profiles, connect the airport first, then reopen this page.`
   String get residentialRouteTransitHelp {
     return Intl.message(
-      'Only checked nodes gain a corresponding residential node; originals remain. Connect selects the first checked node. Switch in the IP-Link Residential proxy group afterward. For provider-only profiles, connect the airport first, then reopen this page.',
+      'Tap cards to select multiple airport nodes. Card latency measures the airport node; tests in IP-Link Residential measure the complete chain. Only selected nodes gain residential versions. Originals remain in their airport group. Connect selects the first selected residential node; switch in IP-Link Residential afterward. For provider-only profiles, connect the airport first, then reopen this page.',
       name: 'residentialRouteTransitHelp',
       desc: '',
       args: [],
@@ -6703,6 +6703,76 @@ class AppLocalizations {
     return Intl.message(
       'The airport profile changed. This operation stopped; reopen residential routing for the current profile.',
       name: 'residentialRouteProfileChanged',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Paste the complete socks5://username:password@host:port URL. Address, port and credentials are parsed automatically when saving. The link stays hidden.`
+  String get residentialRouteUrlHelp {
+    return Intl.message(
+      'Paste the complete socks5://username:password@host:port URL. Address, port and credentials are parsed automatically when saving. The link stays hidden.',
+      name: 'residentialRouteUrlHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current proxy exit: {node}`
+  String residentialRouteActive(String node) {
+    return Intl.message(
+      'Current proxy exit: $node',
+      name: 'residentialRouteActive',
+      desc: '',
+      args: [node],
+    );
+  }
+
+  /// `Proxy rules use this residential node. Airport group selections are retained independently. Existing DIRECT and rejection rules remain.`
+  String get residentialRouteGroupHelp {
+    return Intl.message(
+      'Proxy rules use this residential node. Airport group selections are retained independently. Existing DIRECT and rejection rules remain.',
+      name: 'residentialRouteGroupHelp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clash is stopped; the residential chain is inactive.`
+  String get residentialRouteStopped {
+    return Intl.message(
+      'Clash is stopped; the residential chain is inactive.',
+      name: 'residentialRouteStopped',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rule mode is off. A residential group selection alone does not confirm the current exit.`
+  String get residentialRouteOtherMode {
+    return Intl.message(
+      'Rule mode is off. A residential group selection alone does not confirm the current exit.',
+      name: 'residentialRouteOtherMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No residential exit is confirmed. Select a residential node in IP-Link Residential.`
+  String get residentialRouteNotSelected {
+    return Intl.message(
+      'No residential exit is confirmed. Select a residential node in IP-Link Residential.',
+      name: 'residentialRouteNotSelected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Latency testing failed. Keep Clash running and retry.`
+  String get residentialRouteDelayFailed {
+    return Intl.message(
+      'Latency testing failed. Keep Clash running and retry.',
+      name: 'residentialRouteDelayFailed',
       desc: '',
       args: [],
     );

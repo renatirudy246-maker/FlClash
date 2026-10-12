@@ -136,23 +136,25 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m45(count) =>
       "${Intl.plural(count, one: '1 proxy', other: '${count} proxies')}";
 
-  static String m46(count) =>
+  static String m46(node) => "Current proxy exit: ${node}";
+
+  static String m47(count) =>
       "${Intl.plural(count, one: '1 rule', other: '${count} rules')}";
 
-  static String m47(appName) => "${appName} (Safe mode)";
+  static String m48(appName) => "${appName} (Safe mode)";
 
-  static String m48(count) =>
+  static String m49(count) =>
       "${Intl.plural(count, one: '1 second', other: '${count} seconds')}";
 
-  static String m49(count) => "${count} selected";
+  static String m50(count) => "${count} selected";
 
-  static String m50(time) => "Checked at ${time}";
+  static String m51(time) => "Checked at ${time}";
 
-  static String m51(label) => "${label} must be a single item";
+  static String m52(label) => "${label} must be a single item";
 
-  static String m52(label) => "${label} must be a URL";
+  static String m53(label) => "${label} must be a URL";
 
-  static String m53(count) =>
+  static String m54(count) =>
       "${Intl.plural(count, one: '1 year ago', other: '${count} years ago')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -1139,6 +1141,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetTip": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to reset?",
     ),
+    "residentialRouteActive": m46,
     "residentialRouteAirportUnavailable": MessageLookupByLibrary.simpleMessage(
       "Nodes created and configuration applied, but the airport test failed. Check the original airport node and test URL before testing the residential chain.",
     ),
@@ -1147,6 +1150,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "residentialRouteConnect": MessageLookupByLibrary.simpleMessage(
       "Save and connect",
+    ),
+    "residentialRouteDelayFailed": MessageLookupByLibrary.simpleMessage(
+      "Latency testing failed. Keep Clash running and retry.",
     ),
     "residentialRouteDescription": MessageLookupByLibrary.simpleMessage(
       "Route proxied traffic through an airport node, then your residential SOCKS5 proxy. Existing DIRECT and rejection rules remain. Settings belong to the current airport profile and survive subscription updates. No companion app is needed.",
@@ -1160,8 +1166,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
       "Saving or applying failed; connection is unconfirmed. Check the current profile and logs. Credentials are not displayed.",
     ),
+    "residentialRouteGroupHelp": MessageLookupByLibrary.simpleMessage(
+      "Proxy rules use this residential node. Airport group selections are retained independently. Existing DIRECT and rejection rules remain.",
+    ),
     "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
       "Import and select an airport profile first. If settings cannot be read, inspect the local configuration before connecting.",
+    ),
+    "residentialRouteNotSelected": MessageLookupByLibrary.simpleMessage(
+      "No residential exit is confirmed. Select a residential node in IP-Link Residential.",
+    ),
+    "residentialRouteOtherMode": MessageLookupByLibrary.simpleMessage(
+      "Rule mode is off. A residential group selection alone does not confirm the current exit.",
     ),
     "residentialRouteParse": MessageLookupByLibrary.simpleMessage(
       "Fill fields from URL",
@@ -1188,6 +1203,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteShowPassword": MessageLookupByLibrary.simpleMessage(
       "Show password",
     ),
+    "residentialRouteStopped": MessageLookupByLibrary.simpleMessage(
+      "Clash is stopped; the residential chain is inactive.",
+    ),
     "residentialRouteTitle": MessageLookupByLibrary.simpleMessage(
       "Residential route · IP-Link",
     ),
@@ -1195,16 +1213,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "Airport transit nodes (multiple selection)",
     ),
     "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
-      "Only checked nodes gain a corresponding residential node; originals remain. Connect selects the first checked node. Switch in the IP-Link Residential proxy group afterward. For provider-only profiles, connect the airport first, then reopen this page.",
+      "Tap cards to select multiple airport nodes. Card latency measures the airport node; tests in IP-Link Residential measure the complete chain. Only selected nodes gain residential versions. Originals remain in their airport group. Connect selects the first selected residential node; switch in IP-Link Residential afterward. For provider-only profiles, connect the airport first, then reopen this page.",
     ),
     "residentialRouteUnverified": MessageLookupByLibrary.simpleMessage(
       "Residential nodes created and configuration applied. The airport test passed, but the residential test failed. Check SOCKS5 details or try another residential node. A failed test does not necessarily mean invalid credentials.",
     ),
-    "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
-      "SOCKS5 URL (optional)",
-    ),
+    "residentialRouteUrl": MessageLookupByLibrary.simpleMessage("SOCKS5 URL"),
     "residentialRouteUrlError": MessageLookupByLibrary.simpleMessage(
       "Invalid SOCKS5 URL. Use socks5://username:password@host:port; percent-encode special characters.",
+    ),
+    "residentialRouteUrlHelp": MessageLookupByLibrary.simpleMessage(
+      "Paste the complete socks5://username:password@host:port URL. Address, port and credentials are parsed automatically when saving. The link stays hidden.",
     ),
     "residentialRouteUsername": MessageLookupByLibrary.simpleMessage(
       "Username",
@@ -1374,10 +1393,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "ruleSet": MessageLookupByLibrary.simpleMessage("Rule set"),
     "ruleTarget": MessageLookupByLibrary.simpleMessage("Rule target"),
     "rules": MessageLookupByLibrary.simpleMessage("Rules"),
-    "rulesCount": m46,
+    "rulesCount": m47,
     "runTime": MessageLookupByLibrary.simpleMessage("Run time"),
     "safeMode": MessageLookupByLibrary.simpleMessage("Safe mode"),
-    "safeModeAppTitle": m47,
+    "safeModeAppTitle": m48,
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("Save the changes?"),
     "script": MessageLookupByLibrary.simpleMessage("Script"),
@@ -1389,7 +1408,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "seconds": MessageLookupByLibrary.simpleMessage("seconds"),
-    "secondsCount": m48,
+    "secondsCount": m49,
     "selectAll": MessageLookupByLibrary.simpleMessage("Select all"),
     "selectProxies": MessageLookupByLibrary.simpleMessage("Select proxies"),
     "selectProxyProviders": MessageLookupByLibrary.simpleMessage(
@@ -1405,13 +1424,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Please select a sub-rule",
     ),
     "selected": MessageLookupByLibrary.simpleMessage("Selected"),
-    "selectedCountTitle": m49,
+    "selectedCountTitle": m50,
     "server": MessageLookupByLibrary.simpleMessage("Server"),
     "serviceAvailable": MessageLookupByLibrary.simpleMessage("Available"),
     "serviceBlocked": MessageLookupByLibrary.simpleMessage("Blocked"),
     "serviceCheck": MessageLookupByLibrary.simpleMessage("Check"),
     "serviceCheckAll": MessageLookupByLibrary.simpleMessage("Check all"),
-    "serviceCheckedAt": m50,
+    "serviceCheckedAt": m51,
     "serviceComingSoon": MessageLookupByLibrary.simpleMessage("Coming soon"),
     "serviceDisallowedIsp": MessageLookupByLibrary.simpleMessage(
       "Disallowed ISP",
@@ -1448,7 +1467,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Start without showing the window",
     ),
     "singleAdd": MessageLookupByLibrary.simpleMessage("Single add"),
-    "singleValueTip": m51,
+    "singleValueTip": m52,
     "size": MessageLookupByLibrary.simpleMessage("Size"),
     "slide": MessageLookupByLibrary.simpleMessage("Slide"),
     "socksPort": MessageLookupByLibrary.simpleMessage("SOCKS port"),
@@ -1550,7 +1569,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "urlDesc": MessageLookupByLibrary.simpleMessage(
       "Obtain a profile from a URL",
     ),
-    "urlTip": m52,
+    "urlTip": m53,
     "useHosts": MessageLookupByLibrary.simpleMessage("Use hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("Use system hosts"),
     "usedTraffic": MessageLookupByLibrary.simpleMessage("Used traffic"),
@@ -1575,7 +1594,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "writeToSystemDesc": MessageLookupByLibrary.simpleMessage(
       "Also set the system clock; Android ignores it",
     ),
-    "yearsAgo": m53,
+    "yearsAgo": m54,
     "yes": MessageLookupByLibrary.simpleMessage("Yes"),
     "zhCN": MessageLookupByLibrary.simpleMessage("Simplified Chinese"),
   };

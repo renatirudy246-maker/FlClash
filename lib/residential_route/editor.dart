@@ -7,6 +7,9 @@ class ResidentialRouteEditor extends StatefulWidget {
   final ResidentialRouteConfig initial;
   final List<String> nodes;
   final Map<String, String> labels;
+  final Widget Function(BuildContext, String, bool, VoidCallback?)? nodeBuilder;
+  final double? nodeHeight;
+  final Future<void> Function()? onTestNodes;
   final Future<ResidentialRouteOutcome> Function(
     ResidentialRouteConfig config,
     bool connect,
@@ -19,6 +22,9 @@ class ResidentialRouteEditor extends StatefulWidget {
     required this.nodes,
     required this.labels,
     required this.onSave,
+    this.nodeBuilder,
+    this.nodeHeight,
+    this.onTestNodes,
   });
 
   @override
@@ -26,17 +32,11 @@ class ResidentialRouteEditor extends StatefulWidget {
 }
 
 class _ResidentialRouteEditorState extends State<ResidentialRouteEditor> {
-  final _formKey = GlobalKey<FormState>();
-  final _url = TextEditingController();
-  late final _server = TextEditingController(text: widget.initial.server);
-  late final _port = TextEditingController(text: '${widget.initial.port}');
-  late final _username = TextEditingController(text: widget.initial.username);
-  late final _password = TextEditingController(text: widget.initial.password);
-  late final _transit = TextEditingController(text: widget.initial.transit);
+  late final _url = TextEditingController(text: widget.initial.socksUrl);
   late final _transits = widget.initial.selectedTransits.toSet();
   late bool _enabled = widget.initial.enabled;
   bool _busy = false;
-  bool _showPassword = false;
+  bool _testing = false;
   String? _status;
 
   String _label(String key) => widget.labels[key]!;
@@ -44,42 +44,37 @@ class _ResidentialRouteEditorState extends State<ResidentialRouteEditor> {
   @override
   void dispose() {
     _url.dispose();
-    _server.dispose();
-    _port.dispose();
-    _username.dispose();
-    _password.dispose();
-    _transit.dispose();
     super.dispose();
   }
 
-  ResidentialRouteConfig _config(bool enabled) => ResidentialRouteConfig(
-    enabled: enabled,
-    server: _server.text.trim(),
-    port: int.tryParse(_port.text) ?? 0,
-    username: _username.text,
-    password: _password.text,
-    transit: _transit.text,
-    transits: widget.nodes.isEmpty ? const [] : _transits.toList(),
-  );
-
-  void _parseUrl() {
+  ResidentialRouteConfig _config(bool enabled) {
+    ResidentialRouteConfig endpoint;
     try {
-      final config = ResidentialRouteConfig.parseSocksUrl(_url.text);
-      _server.text = config.server;
-      _port.text = '${config.port}';
-      _username.text = config.username;
-      _password.text = config.password;
-      _url.clear();
-      setState(() => _status = null);
+      endpoint = ResidentialRouteConfig.parseSocksUrl(_url.text);
     } on FormatException {
-      setState(() => _status = _label('urlError'));
+      if (enabled) rethrow;
+      endpoint = widget.initial;
     }
+    return ResidentialRouteConfig(
+      enabled: enabled,
+      server: endpoint.server,
+      port: endpoint.port,
+      username: endpoint.username,
+      password: endpoint.password,
+      transit: _transits.firstOrNull ?? '',
+      transits: _transits.toList(),
+    );
   }
 
   Future<void> _save(bool connect) async {
     final enabled = connect || _enabled;
-    if (enabled && !_formKey.currentState!.validate()) return;
-    final config = _config(enabled);
+    ResidentialRouteConfig config;
+    try {
+      config = _config(enabled);
+    } on FormatException {
+      setState(() => _status = _label('urlError'));
+      return;
+    }
     if (enabled) {
       try {
         config.validate();
@@ -120,132 +115,157 @@ class _ResidentialRouteEditorState extends State<ResidentialRouteEditor> {
     }
   }
 
-  Widget _field(
-    String key,
-    TextEditingController controller, {
-    TextInputType? keyboardType,
-    bool obscure = false,
-  }) => Padding(
+  Widget _urlField() => Padding(
     padding: const EdgeInsets.only(bottom: 16),
     child: TextFormField(
-      controller: controller,
+      controller: _url,
       enabled: !_busy,
-      keyboardType: keyboardType,
-      obscureText: obscure,
+      keyboardType: TextInputType.url,
+      obscureText: true,
       autocorrect: false,
       enableSuggestions: false,
       onChanged: (_) => setState(() => _status = null),
-      decoration: InputDecoration(labelText: _label(key)),
-      validator: (value) =>
-          (key == 'server' || key == 'port' || key == 'transit') &&
-              (value?.isEmpty ?? true)
-          ? _label('endpointError')
-          : null,
+      decoration: InputDecoration(labelText: _label('url')),
     ),
   );
 
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(_label('description')),
-          const SizedBox(height: 16),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(_label('enabled')),
-            value: _enabled,
-            onChanged: _busy
-                ? null
-                : (value) => setState(() {
-                    _enabled = value;
-                    _status = null;
-                  }),
-          ),
-          _field('url', _url, obscure: true),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: _busy ? null : _parseUrl,
-              child: Text(_label('parse')),
-            ),
-          ),
-          const SizedBox(height: 8),
-          _field('server', _server),
-          _field('port', _port, keyboardType: TextInputType.number),
-          _field('username', _username),
-          _field('password', _password, obscure: !_showPassword),
-          CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(_label('showPassword')),
-            value: _showPassword,
-            onChanged: _busy
-                ? null
-                : (value) => setState(() => _showPassword = value ?? false),
-          ),
-          if (widget.nodes.isNotEmpty) ...[
-            Text('${_label('transit')} (${_transits.length})'),
-            SizedBox(
-              height: (({...widget.nodes, ..._transits}.length * 64).clamp(
-                64,
-                280,
-              )).toDouble(),
-              child: ListView(
-                children: [
-                  for (final name in {...widget.nodes, ..._transits})
-                    CheckboxListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(name),
-                      value: _transits.contains(name),
-                      onChanged: _busy
-                          ? null
-                          : (value) => setState(() {
-                              if (value == true) {
-                                _transits.add(name);
-                              } else {
-                                _transits.remove(name);
-                              }
-                              _transit.text = _transits.firstOrNull ?? '';
-                              _status = null;
-                            }),
-                    ),
-                ],
+  Future<void> _testNodes() async {
+    setState(() => _testing = true);
+    try {
+      await widget.onTestNodes!();
+    } catch (_) {
+      if (mounted) setState(() => _status = _label('delayFailed'));
+    } finally {
+      if (mounted) setState(() => _testing = false);
+    }
+  }
+
+  Widget _node(BuildContext context, String name) {
+    final selected = _transits.contains(name);
+    final onTap = _busy
+        ? null
+        : () => setState(() {
+            if (selected) {
+              _transits.remove(name);
+            } else {
+              _transits.add(name);
+            }
+            _status = null;
+          });
+    return Semantics(
+      selected: selected,
+      child:
+          widget.nodeBuilder?.call(context, name, selected, onTap) ??
+          Card(
+            child: InkWell(
+              onTap: onTap,
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(name),
               ),
             ),
-            const SizedBox(height: 16),
-          ] else
-            _field('transit', _transit),
-          Text(_label('transitHelp')),
-          const SizedBox(height: 24),
-          if (_status != null) ...[
-            Text(_status!, key: const ValueKey('residential-status')),
-            const SizedBox(height: 16),
-          ],
-          FilledButton(
-            onPressed: _busy ? null : () => _save(true),
-            child: _busy
-                ? Row(
+          ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(_label('description')),
+        const SizedBox(height: 16),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text(_label('enabled')),
+          value: _enabled,
+          onChanged: _busy
+              ? null
+              : (value) => setState(() {
+                  _enabled = value;
+                  _status = null;
+                }),
+        ),
+        _urlField(),
+        Text(_label('urlHelp')),
+        const SizedBox(height: 16),
+        if ({...widget.nodes, ..._transits}.isNotEmpty) ...[
+          Row(
+            children: [
+              Expanded(
+                child: Text('${_label('transit')} (${_transits.length})'),
+              ),
+              if (widget.onTestNodes != null)
+                TextButton(
+                  onPressed: _busy || _testing ? null : _testNodes,
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(_label('working')),
+                      if (_testing) ...[
+                        const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                      Text(_label('testNodes')),
                     ],
-                  )
-                : Text(_label('connect')),
+                  ),
+                ),
+            ],
           ),
-          OutlinedButton(
-            onPressed: _busy ? null : () => _save(false),
-            child: Text(_label('save')),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final names = {...widget.nodes, ..._transits}.toList();
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: (constraints.maxWidth / 240).floor().clamp(
+                    1,
+                    6,
+                  ),
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  mainAxisExtent: widget.nodeHeight ?? 100,
+                ),
+                itemCount: names.length,
+                itemBuilder: (context, index) => _node(context, names[index]),
+              );
+            },
           ),
+          const SizedBox(height: 16),
         ],
-      ),
+        Text(_label('transitHelp')),
+        const SizedBox(height: 24),
+        if (_status != null) ...[
+          Text(_status!, key: const ValueKey('residential-status')),
+          const SizedBox(height: 16),
+        ],
+        FilledButton(
+          onPressed: _busy || _testing ? null : () => _save(true),
+          child: _busy
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(_label('working')),
+                  ],
+                )
+              : Text(_label('connect')),
+        ),
+        OutlinedButton(
+          onPressed: _busy || _testing ? null : () => _save(false),
+          child: Text(_label('save')),
+        ),
+      ],
     );
   }
 }

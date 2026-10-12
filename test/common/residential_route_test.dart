@@ -58,7 +58,7 @@ void main() {
     expect((config['proxy-groups'] as List).last, {
       'name': ResidentialRouteConfig.routeName,
       'type': 'select',
-      'proxies': [route.nodeName('Airport HK'), 'Airport HK'],
+      'proxies': [route.nodeName('Airport HK')],
     });
     expect(residential['name'], route.nodeName('Airport HK'));
     expect(config['rules'], [
@@ -152,8 +152,6 @@ void main() {
     expect((updated['proxy-groups'] as List).last['proxies'], [
       multi.nodeName('Airport HK'),
       multi.nodeName('Airport JP'),
-      'Airport HK',
-      'Airport JP',
     ]);
     expect(
       ResidentialRouteConfig.fromJson(multi.toJson()).selectedTransits,
@@ -230,6 +228,29 @@ void main() {
       expect(error.toString(), isNot(contains(secret)));
     }
   });
+
+  test(
+    'saved endpoints round-trip to hidden URL without changing credentials',
+    () {
+      for (final endpoint in [
+        route,
+        const ResidentialRouteConfig(
+          server: '2001:db8::30',
+          port: 443,
+          username: 'u:+@',
+          password: 'p% #:@',
+        ),
+        const ResidentialRouteConfig(server: '192.0.2.30', port: 1080),
+      ]) {
+        final parsed = ResidentialRouteConfig.parseSocksUrl(endpoint.socksUrl);
+        expect(parsed.server, endpoint.server);
+        expect(parsed.port, endpoint.port);
+        expect(parsed.username, endpoint.username);
+        expect(parsed.password, endpoint.password);
+      }
+      expect(const ResidentialRouteConfig().socksUrl, '');
+    },
+  );
 
   test(
     'rejects invalid ports and SOCKS5 credentials longer than 255 bytes',

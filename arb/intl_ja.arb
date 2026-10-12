@@ -781,7 +781,7 @@
   "residentialRouteTitle": "住宅プロキシ · IP-Link",
   "residentialRouteDescription": "通信を空港ノードから住宅 SOCKS5 に中継します。DIRECT と拒否ルールを維持します。設定は現在のプロファイルに保存され、購読更新後も適用されます。追加アプリは不要です。",
   "residentialRouteEnabled": "住宅プロキシを有効にする",
-  "residentialRouteUrl": "SOCKS5 URL（任意）",
+  "residentialRouteUrl": "SOCKS5 リンク",
   "residentialRouteParse": "URL から入力",
   "residentialRouteServer": "住宅プロキシのサーバー",
   "residentialRoutePort": "ポート",
@@ -789,7 +789,7 @@
   "residentialRoutePassword": "パスワード",
   "residentialRouteShowPassword": "パスワードを表示",
   "residentialRouteTransit": "中継ノード（複数選択）",
-  "residentialRouteTransitHelp": "選択したノードに住宅ノードを追加し、元のノードも残します。接続時は最初の選択を使用します。その後は IP-Link Residential グループで切り替えます。プロバイダーのみの設定では先に接続して画面を開き直してください。",
+  "residentialRouteTransitHelp": "カードをタップして中継ノードを複数選択します。カードの遅延は中継ノード、IP-Link Residential のテストは住宅経路全体を測定します。選択したノードにのみ住宅版を追加し、元のノードは元のグループに残ります。接続時は最初の住宅ノードを選択します。その後は IP-Link Residential で切り替えます。プロバイダーのみの構成は先に接続してからこの画面を開いてください。",
   "residentialRouteConnect": "保存して接続",
   "residentialRouteSave": "設定を保存して適用",
   "residentialRouteWorking": "設定を適用して接続をテスト中…",
@@ -803,5 +803,13 @@
   "residentialRouteAirportUnavailable": "ノードを生成して設定を適用しましたが、中継テストは失敗しました。元のノードとテスト URL を確認してください。",
   "residentialRouteApplyFailed": "住宅設定を適用できませんでした。接続は未確認で、保存した設定は保持されています。設定とログを確認してください。",
   "residentialRouteSelectionFailed": "設定を適用しましたが、住宅ノードを選択できませんでした。プロキシ画面とログを確認してください。",
-  "residentialRouteProfileChanged": "プロファイルが変更されたため処理を停止しました。現在のプロファイルで開き直してください。"
+  "residentialRouteProfileChanged": "プロファイルが変更されたため処理を停止しました。現在のプロファイルで開き直してください。",
+  "residentialRouteUrlHelp": "socks5://ユーザー名:パスワード@ホスト:ポート の完全なリンクを貼り付けてください。保存時に自動解析されます。リンクは非表示のままです。",
+  "residentialRouteActive": "現在のプロキシ出口：{node}",
+  "residentialRouteGroupHelp": "プロキシルールはこの住宅ノードを使用します。元のグループの選択は独立して保持され、DIRECT と拒否ルールは維持されます。",
+  "residentialRouteStopped": "Clash は停止中です。住宅経路は無効です。",
+  "residentialRouteOtherMode": "ルールモードではありません。住宅グループの選択だけでは現在の出口を確認できません。",
+  "residentialRouteNotSelected": "住宅出口を確認できません。IP-Link Residential で住宅ノードを選択してください。",
+  "@residentialRouteActive": {"placeholders": {"node": {"type": "String"}}},
+  "residentialRouteDelayFailed": "遅延テストに失敗しました。Clash を起動したまま再試行してください。"
 }

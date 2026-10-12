@@ -10,15 +10,20 @@ and notices are retained.
 
 1. Import and select your airport subscription as usual.
 2. Open the link button on the dashboard, or Tools → Residential route · IP-Link.
-3. Enter the residential SOCKS5 server, port, username and password. A
-   `socks5://username:password@host:port` URL can fill these fields. Percent-encode
-   reserved characters in credentials, and bracket IPv6 hosts in URLs.
-4. Check one or more concrete airport transit nodes and tap Save and connect.
-   Only checked nodes gain corresponding `original-name 住宅-tag` SOCKS5 nodes.
-   Original nodes and groups remain. Connect selects the first checked item;
-   switch later in the `IP-Link Residential` group, which also contains the
-   checked original airport nodes. For
-   provider-only subscriptions, connect the original airport profile first,
+3. Paste the full `socks5://username:password@host:port` URL into the single
+   hidden field. Saving parses it automatically. Existing settings fill it
+   automatically on upgrade. Percent-encode reserved characters in credentials,
+   and bracket IPv6 hosts in URLs. Authentication-free SOCKS5 URLs also work.
+4. Tap one or more airport node cards and tap Save and connect. Cards show
+   the protocol and the same latency data as the proxy page; their test button
+   measures the airport node. Only selected nodes gain corresponding
+   `original-name 住宅-tag` SOCKS5 nodes. Original nodes and groups remain.
+   The `IP-Link Residential` group contains only residential versions.
+   Connect selects the first selected item; switch residential nodes in this
+   group afterward. Its tests measure the complete chain. The proxy page shows
+   the live residential exit in rule mode; remembered airport group selections
+   are independent. A stopped client or a different mode is identified explicitly.
+   For provider-only subscriptions, connect the original airport profile first,
    then reopen this page to populate provider nodes.
 5. The button shows progress immediately; results appear above it and in a
    snackbar. Results distinguish configuration application, node selection,
@@ -104,14 +109,17 @@ certificates change between builds; locally delivered APKs are re-signed with a
 persistent private test keystore so future local deliveries can update in place.
 Stop the other client's VPN before connecting this build. This is a test
 distribution; the build workflow does not publish a stable release.
+The release UI omits the pre-release ribbon; safe-mode and debug warnings remain.
 
-Local checks passed 66 targeted Flutter tests, 43 setup-hook tests and root
-Dart analysis. An isolated Mihomo fixture verified the airport-to-residential
-chain, saved configuration after core restart and failure without direct
-fallback on incorrect credentials. A safe-mode x64 APK was built for UI QA.
-The inherited Windows lint/task suite has six path-related failures also
-reproduced against the unmodified upstream snapshot; this is not a claim
-that the full suite passes.
+The current residential/proxy checks passed 92 targeted Flutter tests and root
+Dart analysis, with 98.07% residential-module coverage. An isolated Mihomo fixture
+verified both airport-to-residential chains, node switching, restart persistence
+and failure without direct fallback on incorrect credentials.
+Broader local widget/localization checks passed 584 tests with two environment
+limitations: the dynamic-message lint does not normalize Windows separators,
+and a script-editor test needs a native Rust library absent from the lightweight
+test checkout. The full native-enabled suite runs in hosted CI; these local
+checks do not establish that the complete suite passes on Windows.
 
 Additional acceptance must check the Android page, a real chain and exit IP,
 closing the configuration page, service restart, subscription refresh and

@@ -781,7 +781,7 @@
   "residentialRouteTitle": "Residential route · IP-Link",
   "residentialRouteDescription": "Route proxied traffic through an airport node, then your residential SOCKS5 proxy. Existing DIRECT and rejection rules remain. Settings belong to the current airport profile and survive subscription updates. No companion app is needed.",
   "residentialRouteEnabled": "Enable residential route",
-  "residentialRouteUrl": "SOCKS5 URL (optional)",
+  "residentialRouteUrl": "SOCKS5 URL",
   "residentialRouteParse": "Fill fields from URL",
   "residentialRouteServer": "Residential server",
   "residentialRoutePort": "Port",
@@ -789,7 +789,7 @@
   "residentialRoutePassword": "Password",
   "residentialRouteShowPassword": "Show password",
   "residentialRouteTransit": "Airport transit nodes (multiple selection)",
-  "residentialRouteTransitHelp": "Only checked nodes gain a corresponding residential node; originals remain. Connect selects the first checked node. Switch in the IP-Link Residential proxy group afterward. For provider-only profiles, connect the airport first, then reopen this page.",
+  "residentialRouteTransitHelp": "Tap cards to select multiple airport nodes. Card latency measures the airport node; tests in IP-Link Residential measure the complete chain. Only selected nodes gain residential versions. Originals remain in their airport group. Connect selects the first selected residential node; switch in IP-Link Residential afterward. For provider-only profiles, connect the airport first, then reopen this page.",
   "residentialRouteConnect": "Save and connect",
   "residentialRouteSave": "Save / apply settings",
   "residentialRouteWorking": "Applying configuration and testing the chain…",
@@ -803,5 +803,13 @@
   "residentialRouteAirportUnavailable": "Nodes created and configuration applied, but the airport test failed. Check the original airport node and test URL before testing the residential chain.",
   "residentialRouteApplyFailed": "Residential configuration could not be applied. Connection is unconfirmed; saved settings are retained. Check the profile and logs.",
   "residentialRouteSelectionFailed": "Configuration applied, but the residential node could not be selected. Routing is unconfirmed; check the proxy page and logs.",
-  "residentialRouteProfileChanged": "The airport profile changed. This operation stopped; reopen residential routing for the current profile."
+  "residentialRouteProfileChanged": "The airport profile changed. This operation stopped; reopen residential routing for the current profile.",
+  "residentialRouteUrlHelp": "Paste the complete socks5://username:password@host:port URL. Address, port and credentials are parsed automatically when saving. The link stays hidden.",
+  "residentialRouteActive": "Current proxy exit: {node}",
+  "residentialRouteGroupHelp": "Proxy rules use this residential node. Airport group selections are retained independently. Existing DIRECT and rejection rules remain.",
+  "residentialRouteStopped": "Clash is stopped; the residential chain is inactive.",
+  "residentialRouteOtherMode": "Rule mode is off. A residential group selection alone does not confirm the current exit.",
+  "residentialRouteNotSelected": "No residential exit is confirmed. Select a residential node in IP-Link Residential.",
+  "@residentialRouteActive": {"placeholders": {"node": {"type": "String"}}},
+  "residentialRouteDelayFailed": "Latency testing failed. Keep Clash running and retry."
 }

@@ -137,23 +137,25 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m45(count) => "${count} прокси";
 
-  static String m46(count) =>
+  static String m46(node) => "Текущий выход прокси: ${node}";
+
+  static String m47(count) =>
       "${Intl.plural(count, one: '${count} правило', few: '${count} правила', many: '${count} правил', other: '${count} правила')}";
 
-  static String m47(appName) => "${appName} (Безопасный режим)";
+  static String m48(appName) => "${appName} (Безопасный режим)";
 
-  static String m48(count) =>
+  static String m49(count) =>
       "${Intl.plural(count, one: '${count} секунда', few: '${count} секунды', many: '${count} секунд', other: '${count} секунды')}";
 
-  static String m49(count) => "Выбрано: ${count}";
+  static String m50(count) => "Выбрано: ${count}";
 
-  static String m50(time) => "Проверено в ${time}";
+  static String m51(time) => "Проверено в ${time}";
 
-  static String m51(label) => "«${label}» — только одно значение";
+  static String m52(label) => "«${label}» — только одно значение";
 
-  static String m52(label) => "Значение «${label}» должно быть URL";
+  static String m53(label) => "Значение «${label}» должно быть URL";
 
-  static String m53(count) =>
+  static String m54(count) =>
       "${Intl.plural(count, one: '${count} год назад', few: '${count} года назад', many: '${count} лет назад', other: '${count} года назад')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -1192,6 +1194,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetTip": MessageLookupByLibrary.simpleMessage(
       "Вы уверены, что хотите выполнить сброс?",
     ),
+    "residentialRouteActive": m46,
     "residentialRouteAirportUnavailable": MessageLookupByLibrary.simpleMessage(
       "Узлы созданы, настройки применены, но проверка транзита не прошла. Проверьте исходный узел и URL проверки.",
     ),
@@ -1200,6 +1203,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "residentialRouteConnect": MessageLookupByLibrary.simpleMessage(
       "Сохранить и подключить",
+    ),
+    "residentialRouteDelayFailed": MessageLookupByLibrary.simpleMessage(
+      "Тест задержки не завершён. Оставьте Clash включённым и повторите.",
     ),
     "residentialRouteDescription": MessageLookupByLibrary.simpleMessage(
       "Направляет трафик через узел провайдера, затем через резидентный SOCKS5. Правила DIRECT и блокировки сохраняются. Настройки привязаны к текущему профилю и сохраняются при обновлении подписки. Отдельное приложение не нужно.",
@@ -1213,8 +1219,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteFailed": MessageLookupByLibrary.simpleMessage(
       "Ошибка сохранения или применения. Подключение не подтверждено. Проверьте профиль и журнал. Учётные данные не отображаются.",
     ),
+    "residentialRouteGroupHelp": MessageLookupByLibrary.simpleMessage(
+      "Правила прокси используют этот домашний узел. Выбор в исходных группах сохраняется отдельно. Правила DIRECT и отклонения сохраняются.",
+    ),
     "residentialRouteLoadError": MessageLookupByLibrary.simpleMessage(
       "Сначала импортируйте и выберите профиль. Если настройки не читаются, проверьте их перед подключением.",
+    ),
+    "residentialRouteNotSelected": MessageLookupByLibrary.simpleMessage(
+      "Домашний выход не подтверждён. Выберите домашний узел в IP-Link Residential.",
+    ),
+    "residentialRouteOtherMode": MessageLookupByLibrary.simpleMessage(
+      "Режим правил выключен. Выбор домашней группы не подтверждает текущий выход.",
     ),
     "residentialRouteParse": MessageLookupByLibrary.simpleMessage(
       "Заполнить из URL",
@@ -1239,6 +1254,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "residentialRouteShowPassword": MessageLookupByLibrary.simpleMessage(
       "Показать пароль",
     ),
+    "residentialRouteStopped": MessageLookupByLibrary.simpleMessage(
+      "Clash остановлен. Домашняя цепочка не работает.",
+    ),
     "residentialRouteTitle": MessageLookupByLibrary.simpleMessage(
       "Резидентный прокси · IP-Link",
     ),
@@ -1246,16 +1264,19 @@ class MessageLookup extends MessageLookupByLibrary {
       "Транзитные узлы (можно выбрать несколько)",
     ),
     "residentialRouteTransitHelp": MessageLookupByLibrary.simpleMessage(
-      "Для отмеченных узлов создаются домашние узлы, исходные сохраняются. Подключение выбирает первый отмеченный узел. Далее переключайте узлы в группе IP-Link Residential. Для профилей провайдеров сначала подключите исходный профиль и откройте страницу снова.",
+      "Нажмите карточки, чтобы выбрать несколько узлов. Задержка карточки относится к исходному узлу; тест в IP-Link Residential проверяет всю цепочку. Домашние версии добавляются только для выбранных узлов. Исходные узлы остаются в своей группе. При подключении выбирается первый домашний узел, затем переключайте их в IP-Link Residential. Для конфигураций только с провайдерами сначала подключитесь и откройте эту страницу снова.",
     ),
     "residentialRouteUnverified": MessageLookupByLibrary.simpleMessage(
       "Узлы созданы, настройки применены. Транзит работает, но проверка домашнего прокси не прошла. Проверьте SOCKS5 или выберите другой домашний узел. Причина не обязательно в учётных данных.",
     ),
     "residentialRouteUrl": MessageLookupByLibrary.simpleMessage(
-      "SOCKS5 URL (необязательно)",
+      "Ссылка SOCKS5",
     ),
     "residentialRouteUrlError": MessageLookupByLibrary.simpleMessage(
       "Используйте socks5://username:password@host:port; специальные символы кодируйте процентным кодированием.",
+    ),
+    "residentialRouteUrlHelp": MessageLookupByLibrary.simpleMessage(
+      "Вставьте полную ссылку socks5://имя:пароль@адрес:порт. Адрес, порт и учётные данные разбираются автоматически при сохранении. Ссылка скрыта.",
     ),
     "residentialRouteUsername": MessageLookupByLibrary.simpleMessage(
       "Имя пользователя",
@@ -1441,10 +1462,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "ruleSet": MessageLookupByLibrary.simpleMessage("Набор правил"),
     "ruleTarget": MessageLookupByLibrary.simpleMessage("Цель правила"),
     "rules": MessageLookupByLibrary.simpleMessage("Правила"),
-    "rulesCount": m46,
+    "rulesCount": m47,
     "runTime": MessageLookupByLibrary.simpleMessage("Время работы"),
     "safeMode": MessageLookupByLibrary.simpleMessage("Безопасный режим"),
-    "safeModeAppTitle": m47,
+    "safeModeAppTitle": m48,
     "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
     "saveChanges": MessageLookupByLibrary.simpleMessage("Сохранить изменения?"),
     "script": MessageLookupByLibrary.simpleMessage("Скрипт"),
@@ -1456,7 +1477,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "search": MessageLookupByLibrary.simpleMessage("Поиск"),
     "seconds": MessageLookupByLibrary.simpleMessage("секунд"),
-    "secondsCount": m48,
+    "secondsCount": m49,
     "selectAll": MessageLookupByLibrary.simpleMessage("Выбрать всё"),
     "selectProxies": MessageLookupByLibrary.simpleMessage("Выбрать прокси"),
     "selectProxyProviders": MessageLookupByLibrary.simpleMessage(
@@ -1472,13 +1493,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "Выберите подправило",
     ),
     "selected": MessageLookupByLibrary.simpleMessage("Выбрано"),
-    "selectedCountTitle": m49,
+    "selectedCountTitle": m50,
     "server": MessageLookupByLibrary.simpleMessage("Сервер"),
     "serviceAvailable": MessageLookupByLibrary.simpleMessage("Доступен"),
     "serviceBlocked": MessageLookupByLibrary.simpleMessage("Заблокировано"),
     "serviceCheck": MessageLookupByLibrary.simpleMessage("Проверить"),
     "serviceCheckAll": MessageLookupByLibrary.simpleMessage("Проверить все"),
-    "serviceCheckedAt": m50,
+    "serviceCheckedAt": m51,
     "serviceComingSoon": MessageLookupByLibrary.simpleMessage("Скоро появится"),
     "serviceDisallowedIsp": MessageLookupByLibrary.simpleMessage(
       "Недопустимый провайдер",
@@ -1519,7 +1540,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Запускаться без показа окна",
     ),
     "singleAdd": MessageLookupByLibrary.simpleMessage("По одному"),
-    "singleValueTip": m51,
+    "singleValueTip": m52,
     "size": MessageLookupByLibrary.simpleMessage("Размер"),
     "slide": MessageLookupByLibrary.simpleMessage("Сдвиг"),
     "socksPort": MessageLookupByLibrary.simpleMessage("Порт SOCKS"),
@@ -1627,7 +1648,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload": MessageLookupByLibrary.simpleMessage("Отдача"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage("Получить профиль по URL"),
-    "urlTip": m52,
+    "urlTip": m53,
     "useHosts": MessageLookupByLibrary.simpleMessage("Использовать hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage(
       "Использовать системный hosts",
@@ -1660,7 +1681,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "writeToSystemDesc": MessageLookupByLibrary.simpleMessage(
       "Также устанавливать системные часы; Android это игнорирует",
     ),
-    "yearsAgo": m53,
+    "yearsAgo": m54,
     "yes": MessageLookupByLibrary.simpleMessage("Да"),
     "zhCN": MessageLookupByLibrary.simpleMessage("Упрощённый китайский"),
   };

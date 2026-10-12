@@ -10,6 +10,9 @@ const labels = {
   'description': 'Description',
   'enabled': 'Enable',
   'url': 'SOCKS5 URL',
+  'urlHelp': 'Paste complete URL',
+  'testNodes': 'Test latency',
+  'delayFailed': 'Latency test failed',
   'parse': 'Parse URL',
   'server': 'Server',
   'port': 'Port',
@@ -41,16 +44,20 @@ const initial = ResidentialRouteConfig(
 
 Future<void> mount(
   WidgetTester tester,
-  Future<ResidentialRouteOutcome> Function(ResidentialRouteConfig, bool) onSave,
-) => tester.pumpWidget(
+  Future<ResidentialRouteOutcome> Function(ResidentialRouteConfig, bool)
+  onSave, {
+  Future<void> Function()? onTestNodes,
+  ResidentialRouteConfig initialValue = initial,
+}) => tester.pumpWidget(
   MaterialApp(
     home: Scaffold(
       body: SingleChildScrollView(
         child: ResidentialRouteEditor(
-          initial: initial,
+          initial: initialValue,
           nodes: const ['Airport HK', 'Airport JP', 'Airport US'],
           labels: labels,
           onSave: onSave,
+          onTestNodes: onTestNodes,
         ),
       ),
     ),
@@ -58,6 +65,96 @@ Future<void> mount(
 );
 
 void main() {
+  testWidgets('one hidden URL field automatically parses on connect', (
+    tester,
+  ) async {
+    ResidentialRouteConfig? saved;
+    await mount(tester, (config, _) async {
+      saved = config;
+      return ResidentialRouteOutcome.verified;
+    });
+    expect(find.byType(TextFormField), findsOneWidget);
+    expect(find.text('Parse URL'), findsNothing);
+    expect(find.text('Show password'), findsNothing);
+    await tester.enterText(
+      find.byType(TextFormField),
+      'socks5://next%2Buser:p%3Aa%40ss@[2001:db8::40]:443',
+    );
+    await tester.ensureVisible(find.text('Connect'));
+    await tester.tap(find.text('Connect'));
+    await tester.pumpAndSettle();
+    expect(saved?.server, '2001:db8::40');
+    expect(saved?.port, 443);
+    expect(saved?.username, 'next+user');
+    expect(saved?.password, 'p:a@ss');
+    expect(saved?.selectedTransits, ['Airport HK']);
+    expect(tester.widget<TextField>(find.byType(TextField)).obscureText, true);
+  });
+
+  testWidgets('invalid edited URL cannot reuse old credentials on connect', (
+    tester,
+  ) async {
+    var calls = 0;
+    await mount(tester, (_, _) async {
+      calls++;
+      return ResidentialRouteOutcome.verified;
+    });
+    await tester.enterText(find.byType(TextFormField), 'socks5://broken');
+    await tester.ensureVisible(find.text('Connect'));
+    await tester.tap(find.text('Connect'));
+    await tester.pumpAndSettle();
+    expect(calls, 0);
+    expect(find.text('Invalid URL'), findsOneWidget);
+  });
+
+  testWidgets('invalid URL still allows disabling an existing chain', (
+    tester,
+  ) async {
+    ResidentialRouteConfig? saved;
+    await mount(tester, (config, _) async {
+      saved = config;
+      return ResidentialRouteOutcome.saved;
+    });
+    await tester.enterText(find.byType(TextFormField), 'bad');
+    await tester.ensureVisible(find.text('Save'));
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(saved?.enabled, false);
+    expect(saved?.server, initial.server);
+  });
+
+  testWidgets(
+    'latency failure releases its control and preserves multi-selection',
+    (tester) async {
+      final result = Completer<void>();
+      ResidentialRouteConfig? saved;
+      await mount(tester, (config, _) async {
+        saved = config;
+        return ResidentialRouteOutcome.verified;
+      }, onTestNodes: () => result.future);
+      await tester.ensureVisible(find.text('Airport JP'));
+      await tester.tap(find.text('Airport JP'));
+      await tester.ensureVisible(find.text('Test latency'));
+      await tester.tap(find.text('Test latency'));
+      await tester.pump();
+      expect(
+        tester.widget<TextButton>(find.byType(TextButton)).onPressed,
+        isNull,
+      );
+      result.completeError(StateError('test error'));
+      await tester.pumpAndSettle();
+      expect(find.text('Latency test failed'), findsOneWidget);
+      expect(
+        tester.widget<TextButton>(find.byType(TextButton)).onPressed,
+        isNotNull,
+      );
+      await tester.ensureVisible(find.text('Connect'));
+      await tester.tap(find.text('Connect'));
+      await tester.pumpAndSettle();
+      expect(saved?.selectedTransits, ['Airport HK', 'Airport JP']);
+    },
+  );
+
   testWidgets(
     'multiple checks are saved and unchecked airport nodes are excluded',
     (tester) async {
@@ -144,7 +241,7 @@ void main() {
       expect(saved?.enabled, true);
       expect(saved?.transit, 'Airport HK');
       expect(find.text('Verified'), findsOneWidget);
-      await tester.enterText(find.byType(TextFormField).at(4), 'changed');
+      await tester.enterText(find.byType(TextFormField).first, 'changed');
       await tester.pump();
       expect(find.text('Verified'), findsNothing);
     },
@@ -166,11 +263,11 @@ void main() {
   ) async {
     await mount(tester, (_, _) async => throw StateError('fixture failure'));
     final passwordField = tester.widget<TextFormField>(
-      find.byType(TextFormField).at(4),
+      find.byType(TextFormField).first,
     );
     expect(passwordField, isNotNull);
     expect(
-      tester.widget<TextField>(find.byType(TextField).at(4)).obscureText,
+      tester.widget<TextField>(find.byType(TextField).first).obscureText,
       true,
     );
     await tester.ensureVisible(find.text('Connect'));

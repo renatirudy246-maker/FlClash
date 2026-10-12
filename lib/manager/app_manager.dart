@@ -125,7 +125,7 @@ class AppEnvManager extends ConsumerWidget {
     if (!globalState.isPre) {
       return null;
     }
-    return kDebugMode ? 'DEBUG' : globalState.appEnv.toUpperCase();
+    return kDebugMode ? 'DEBUG' : null;
   }
 
   @override

@@ -38,6 +38,8 @@ class ProxyCard extends ConsumerWidget {
   final GroupType groupType;
   final ProxyCardType type;
   final String? testUrl;
+  final bool? selectionOverride;
+  final VoidCallback? onSelectionChanged;
 
   const ProxyCard({
     super.key,
@@ -46,6 +48,8 @@ class ProxyCard extends ConsumerWidget {
     required this.proxy,
     required this.groupType,
     required this.type,
+    this.selectionOverride,
+    this.onSelectionChanged,
   });
 
   Measure get measure => globalState.measure;
@@ -83,22 +87,24 @@ class ProxyCard extends ConsumerWidget {
       children: [
         Consumer(
           builder: (_, ref, child) {
-            final selectedProxyName = ref.watch(
-              selectedProxyNameProvider(groupName),
-            );
+            final selected =
+                selectionOverride ??
+                (ref.watch(selectedProxyNameProvider(groupName)) == proxy.name);
             return CommonCard(
               radius: AppCorner.lg,
               enterActionsOnRight: true,
               key: key,
-              onPressed: () {
-                selectGroupProxy(
-                  ref,
-                  groupName: groupName,
-                  groupType: groupType,
-                  proxyName: proxy.name,
-                );
-              },
-              isSelected: selectedProxyName == proxy.name,
+              onPressed: selectionOverride != null
+                  ? onSelectionChanged
+                  : () {
+                      selectGroupProxy(
+                        ref,
+                        groupName: groupName,
+                        groupType: groupType,
+                        proxyName: proxy.name,
+                      );
+                    },
+              isSelected: selected,
               child: child!,
             );
           },

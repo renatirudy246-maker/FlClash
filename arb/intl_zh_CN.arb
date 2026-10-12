@@ -781,7 +781,7 @@
   "residentialRouteTitle": "住宅转接 · IP-Link",
   "residentialRouteDescription": "让代理流量先经过机场节点，再从住宅 SOCKS5 出口访问网站。原有直连和拒绝规则保留。设置绑定当前机场配置，订阅更新后继续生效，无需额外小工具。",
   "residentialRouteEnabled": "启用住宅转接",
-  "residentialRouteUrl": "SOCKS5 链接（可选）",
+  "residentialRouteUrl": "SOCKS5 链接",
   "residentialRouteParse": "从链接填写",
   "residentialRouteServer": "住宅代理地址",
   "residentialRoutePort": "端口",
@@ -789,7 +789,7 @@
   "residentialRoutePassword": "密码",
   "residentialRouteShowPassword": "显示密码",
   "residentialRouteTransit": "机场中转节点（可多选）",
-  "residentialRouteTransitHelp": "仅为勾选的节点新增“原节点名 住宅-标识”，原节点保留。连接时选择第一个勾选项，之后在代理页的 IP-Link Residential 分组切换。只有节点提供者的配置，请先连接机场，再重新打开此页面。",
+  "residentialRouteTransitHelp": "点击卡片多选机场中转节点。卡片延迟是机场节点的延迟；IP-Link Residential 分组的测速是完整住宅链路的延迟。只为选中的节点生成住宅版本，原节点保留在机场分组。连接时选择第一个已选住宅节点，之后在 IP-Link Residential 分组切换。只有节点提供者的配置，请先连接机场再打开此页面。",
   "residentialRouteConnect": "保存并连接",
   "residentialRouteSave": "保存并应用设置",
   "residentialRouteWorking": "正在应用配置并检测链路…",
@@ -803,5 +803,13 @@
   "residentialRouteAirportUnavailable": "住宅节点已生成，配置已应用；机场中转节点未通过测试，请先确认原机场节点可连接及测试网址可访问，再测试住宅链路。",
   "residentialRouteApplyFailed": "住宅配置未能应用，尚未确认连接。请检查当前机场配置与日志；保存的设置仍保留。",
   "residentialRouteSelectionFailed": "配置已应用，但未能选中住宅节点，尚未确认转接。请检查代理页和日志。",
-  "residentialRouteProfileChanged": "当前机场配置已切换，本次操作停止，请打开当前配置的住宅转接页重试。"
+  "residentialRouteProfileChanged": "当前机场配置已切换，本次操作停止，请打开当前配置的住宅转接页重试。",
+  "residentialRouteUrlHelp": "粘贴完整的 socks5://用户名:密码@地址:端口 链接，保存时自动解析地址、端口和账号密码。链接默认隐藏。",
+  "residentialRouteActive": "当前代理出口：{node}",
+  "residentialRouteGroupHelp": "代理规则走此住宅节点；机场分组记住的选择独立保留。原有直连和拒绝规则仍然生效。",
+  "residentialRouteStopped": "Clash 未运行，住宅链路尚未生效。",
+  "residentialRouteOtherMode": "当前不是规则模式，仅选中住宅分组不能确认当前出口。",
+  "residentialRouteNotSelected": "尚未确认住宅出口，请在 IP-Link Residential 分组选择住宅节点。",
+  "@residentialRouteActive": {"placeholders": {"node": {"type": "String"}}},
+  "residentialRouteDelayFailed": "延迟测试未完成，请保持 Clash 运行后重试。"
 }
