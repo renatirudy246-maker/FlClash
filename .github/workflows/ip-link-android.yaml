@@ -38,6 +38,9 @@ jobs:
           cache: true
 
       - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: false
 
       - name: Install Android build tools
         run: sdkmanager 'platforms;android-37.0' 'build-tools;36.0.0' 'ndk;28.2.13676358' 'cmake;3.22.1'
@@ -62,12 +65,12 @@ jobs:
         run: |
           grep -A 2 'rust_api:' pubspec.yaml | grep 'build_assets: true'
           grep -A 2 'setup:' pubspec.yaml | grep 'build_assets: true'
-          flutter build apk --release --target-platform android-arm64 --no-pub
+          flutter build apk --release --target-platform android-arm64 --split-per-abi --no-pub
 
       - name: Prepare install package
         run: |
           mkdir -p dist
-          cp build/app/outputs/flutter-apk/app-release.apk dist/FlClash-IP-Link-arm64.apk
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk dist/FlClash-IP-Link-arm64.apk
           cp IP_LINK.md LICENSE dist/
           git rev-parse HEAD > dist/SOURCE_COMMIT.txt
           cd dist
