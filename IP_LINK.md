@@ -64,9 +64,10 @@ existing VPN lifecycle remains owned by SetupAction and the Android service.
 Use the upstream toolchains and build instructions in `.agents/commands.md`.
 Do not disable native asset hooks in a packaged build.
 
-Windows NDK distributions omit libclang. Install an external libclang library
-and configure `hooks.user_defines.rust_api.libclang_path` in your local build
-configuration. The override is validated and used only when building Android.
+Some NDK distributions, including the Windows build and hosted Linux build
+used here, omit libclang. Install an external libclang library and configure
+`hooks.user_defines.rust_api.libclang_path` in your local build configuration.
+The override is validated and used only when building Android.
 The build hook uses the NDK's resource headers and the minimum API reported by
 Flutter instead of the dependency's hard-coded API 35. Windows builders whose
 Pub cache and checkout are on different drives may also need the local Gradle
